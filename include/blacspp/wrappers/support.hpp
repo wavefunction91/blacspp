@@ -25,7 +25,7 @@ void freebuff( const blacs_int ICONTXT, const blacs_int WAIT );
 
 
 // Infortmational
-blacs_grid_info  grid_info( const blacs_int ICONTXT );
+blacs_grid_dim  grid_info( const blacs_int ICONTXT );
 blacs_int        pnum( const blacs_int ICONTXT, const blacs_int PROW, 
                        const blacs_int PCOL );
 
@@ -34,6 +34,8 @@ std::pair< blacs_int, blacs_int > pcoord( const blacs_int ICONTXT,
 
 // Misc
 void barrier( const blacs_int ICONTXT, const char* SCOPE );
+blacs_int blacs_from_sys( MPI_Comm c );
+void free_sys_handle( const blacs_int handle );
 
 
 }

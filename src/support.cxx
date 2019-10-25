@@ -33,6 +33,8 @@ void Cblacs_pcoord( const blacs_int ICONTXT, const blacs_int PNUM,
 
 // Misc
 void Cblacs_barrier( const blacs_int ICONTXT, const char* SCOPE );
+blacs_int Csys2blacs_handle( MPI_Comm c );
+void Cfree_blacs_system_handle( const blacs_int handle );
 };
 
 
@@ -102,9 +104,9 @@ void freebuff( const blacs_int ICONTXT, const blacs_int WAIT ) {
 
 
 // Infortmational
-blacs_grid_info  grid_info( const blacs_int ICONTXT ) {
+blacs_grid_dim  grid_info( const blacs_int ICONTXT ) {
 
-  blacs_grid_info info;
+  blacs_grid_dim info;
   Cblacs_gridinfo( ICONTXT, &info.np_row, &info.np_col, &info.my_row, &info.my_col );
   return info;
 
@@ -132,8 +134,15 @@ void barrier( const blacs_int ICONTXT, const char* SCOPE ) {
   Cblacs_barrier( ICONTXT, SCOPE );
 }
 
+blacs_int blacs_from_sys( MPI_Comm c ) {
 
+  return Csys2blacs_handle( c );
 
+}
+
+void free_sys_handle( const blacs_int handle ) {
+  Cfree_blacs_system_handle( handle );
+}
 
 
 }
