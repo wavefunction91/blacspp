@@ -5,6 +5,20 @@
 namespace blacspp {
 namespace detail {
 
+  /**
+   *  \brief A SFINAE struct to check if a type is BLACS enabled.
+   *  
+   *  @tparam T Type to query for BLACS support.
+   *
+   *  Type is queried by blacs_supported<T>::value (true/false)
+   *  
+   *  The following types are BLACS enabled:
+   *    - blacs_int (i)
+   *    - float     (s)
+   *    - double    (d)
+   *    - scomplex  (c)
+   *    - dcomplex  (z)
+   */
   template <typename T>
   struct blacs_supported : public std::false_type { };
 
