@@ -17,7 +17,8 @@ detail::enable_if_blacs_supported_t<T>
 }
 
 template <class Container>
-void gesd2d( const Grid& grid, 
+std::enable_if_t< detail::has_data_member_v<Container> >
+gesd2d( const Grid& grid, 
              const blacs_int M, const blacs_int N, const Container& A, 
              const blacs_int LDA, const blacs_int RDEST, const blacs_int CDEST ) {
 
@@ -26,7 +27,8 @@ void gesd2d( const Grid& grid,
 }
 
 template <class Container>
-void gesd2d( const Grid& grid, const Container& A, 
+std::enable_if_t< detail::has_size_member_v<Container> >
+gesd2d( const Grid& grid, const Container& A, 
              const blacs_int RDEST, const blacs_int CDEST ) {
 
   gesd2d( grid, A.size(), 1, A, A.size(), RDEST, CDEST );
@@ -46,7 +48,8 @@ detail::enable_if_blacs_supported_t<T>
 }
 
 template <class Container>
-void trsd2d( const Grid& grid, const char* UPLO, const char* DIAG, 
+std::enable_if_t< detail::has_data_member_v<Container> >
+trsd2d( const Grid& grid, const char* UPLO, const char* DIAG, 
              const blacs_int M, const blacs_int N, const Container& A, 
              const blacs_int LDA, const blacs_int RDEST, const blacs_int CDEST ) {
 
@@ -68,7 +71,8 @@ detail::enable_if_blacs_supported_t<T>
 }
 
 template <class Container>
-void gerv2d( const Grid& grid, const blacs_int M, const blacs_int N,
+std::enable_if_t< detail::has_data_member_v<Container> >
+gerv2d( const Grid& grid, const blacs_int M, const blacs_int N,
              Container& A, const blacs_int LDA, const blacs_int RSRC,
              const blacs_int CSRC ) {
 
@@ -77,7 +81,8 @@ void gerv2d( const Grid& grid, const blacs_int M, const blacs_int N,
 }
 
 template <class Container>
-void gerv2d( const Grid& grid, Container& A, 
+std::enable_if_t< detail::has_size_member_v<Container> >
+gerv2d( const Grid& grid, Container& A, 
              const blacs_int RSRC, const blacs_int CSRC ) {
 
   gerv2d( grid, A.size(), 1, A, A.size(), RSRC, CSRC );
@@ -96,7 +101,8 @@ detail::enable_if_blacs_supported_t<T>
 }
 
 template <class Container>
-void trrv2d( const Grid& grid, const char* UPLO, const char* DIAG, 
+std::enable_if_t< detail::has_data_member_v<Container> >
+trrv2d( const Grid& grid, const char* UPLO, const char* DIAG, 
              const blacs_int M, const blacs_int N, Container& A, 
              const blacs_int LDA, const blacs_int RSRC, const blacs_int CSRC ) {
 
