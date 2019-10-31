@@ -1,25 +1,16 @@
+#define CATCH_CONFIG_RUNNER
+#include <catch2/catch.hpp>
 #include <mpi.h>
-#include <gtest/gtest.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char* argv[])
+{
+    MPI_Init(&argc,&argv);
 
-  MPI_Init(NULL,NULL);
+    int mpi_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
 
-  // Only get print from root
-  ::testing::TestEventListeners& listeners =
-      ::testing::UnitTest::GetInstance()->listeners();
+    int res = Catch::Session().run(argc, argv);
+    MPI_Finalize();
 
-  int rank; MPI_Comm_rank( MPI_COMM_WORLD, &rank );
-  if( rank != 0 ) {
-      delete listeners.Release(listeners.default_result_printer());
-  }
-
-  // Init GT and run tests
-  ::testing::InitGoogleTest(&argc, argv);
-  auto gt_return = RUN_ALL_TESTS();
-
-  MPI_Finalize();
-
-  return gt_return; // return GT result
-
+    return res;
 }

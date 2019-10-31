@@ -1,49 +1,49 @@
-#include <gtest/gtest.h>
+#include <catch2/catch.hpp>
 #include <blacspp/grid.hpp>
 
 
-TEST( CONSTRUCTOR, Default ) {
+TEST_CASE( "Default Constructor", "[constructor]" ) {
 
   blacspp::Grid grid;
-  EXPECT_FALSE( grid.is_valid() );
+  CHECK( not grid.is_valid() );
 
 }
 
-TEST( CONSTRUCTOR, SquareGrid ) {
+TEST_CASE( "Square Grid", "[constructor]" ) {
 
   blacspp::Grid grid = blacspp::Grid::square_grid(MPI_COMM_WORLD);
 
   blacspp::mpi_info mpi(MPI_COMM_WORLD);
 
-  EXPECT_TRUE( grid.is_valid() );  
-  EXPECT_EQ( mpi.size(), grid.npr() * grid.npc() );
+  REQUIRE( grid.is_valid() );  
+  CHECK( mpi.size() == (grid.npr() * grid.npc()) );
 
   auto npr = grid.npr();
-  EXPECT_EQ( grid.ipr(), mpi.rank() % npr );
-  EXPECT_EQ( grid.ipc(), mpi.rank() / npr );
+  CHECK( grid.ipr() == (mpi.rank() / npr) );
+  CHECK( grid.ipc() == (mpi.rank() % npr) );
 
 }
 
 
-TEST( CONSTRUCTOR, Copy ) {
+TEST_CASE( "Copy Constructor", "[constructor]" ) {
 
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::Grid grid2( grid );
 
-  EXPECT_EQ( grid.npr(), grid2.npr() );
-  EXPECT_EQ( grid.npc(), grid2.npc() );
-  EXPECT_EQ( grid.ipr(), grid2.ipr() );
-  EXPECT_EQ( grid.ipc(), grid2.ipc() );
-  EXPECT_EQ( grid.comm(), grid2.comm() );
+  REQUIRE( grid.is_valid()  );
+  REQUIRE( grid2.is_valid() );
 
-  EXPECT_NE( grid.context(), grid2.context() );
+  CHECK( grid.npr()  == grid2.npr()  );
+  CHECK( grid.npc()  == grid2.npc()  );
+  CHECK( grid.ipr()  == grid2.ipr()  );
+  CHECK( grid.ipc()  == grid2.ipc()  );
+  CHECK( grid.comm() == grid2.comm() );
 
-  EXPECT_TRUE( grid.is_valid() );
-  EXPECT_TRUE( grid2.is_valid() );
+  CHECK( grid.context() != grid2.context() );
+
 }
 
-
-TEST( CONSTRUCTOR, Move ) {
+TEST_CASE( "Move Constructor", "[constructor]" ) {
 
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
 
@@ -56,14 +56,14 @@ TEST( CONSTRUCTOR, Move ) {
 
   blacspp::Grid grid2( std::move(grid) );
 
-  EXPECT_EQ( npr, grid2.npr() );
-  EXPECT_EQ( npc, grid2.npc() );
-  EXPECT_EQ( ipr, grid2.ipr() );
-  EXPECT_EQ( ipc, grid2.ipc() );
-  EXPECT_EQ( comm, grid2.comm() );
-  EXPECT_EQ( context, grid2.context() );
+  REQUIRE( grid2.is_valid() );  
+  CHECK( not grid.is_valid() );  
 
-  EXPECT_FALSE( grid.is_valid() );  
-  EXPECT_TRUE( grid2.is_valid() );  
+  CHECK( npr     == grid2.npr()     );
+  CHECK( npc     == grid2.npc()     );
+  CHECK( ipr     == grid2.ipr()     );
+  CHECK( ipc     == grid2.ipc()     );
+  CHECK( comm    == grid2.comm()    );
+  CHECK( context == grid2.context() );
 
 }
