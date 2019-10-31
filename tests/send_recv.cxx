@@ -87,7 +87,7 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
   std::vector< TestType > data_send( M*N, TestType(mpi.rank()) );
   std::vector< TestType > data_recv( M*N, TestType(-1) );
 
-  auto check = [&](char triangle, char diag) {
+  auto check = [&](blacspp::Triangle triangle, blacspp::Diagonal diag) {
     // Check that send data is unchanged
     for( auto x : data_send ) CHECK( x == TestType(mpi.rank()) );
 
@@ -101,13 +101,13 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
       for( auto i = 0; i < M; ++i )
       for( auto j = 0; j < N; ++j ) {
         auto x = data_recv[ i + M*j ];
-        if( diag == 'U' and i == j )
+        if( diag == blacspp::Diagonal::Unit and i == j )
           CHECK( x == TestType(-1) ); // unchanged
 
-        else if( triangle == 'U' and j >= i ) 
+        else if( triangle == blacspp::Triangle::Upper and j >= i ) 
           CHECK( x == TestType(rank_col) );
 
-        else if( triangle == 'L' and i >= j ) 
+        else if( triangle == blacspp::Triangle::Lower and i >= j ) 
           CHECK( x == TestType(rank_col) );
 
         else
@@ -115,8 +115,9 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
       }
   };
 
-  std::array<char,2> tris  = { 'U', 'L' };
-  std::array<char,2> diags = { 'U', 'N' };
+  std::array< blacspp::Triangle, 2 > tris  = { blacspp::Triangle::Upper, blacspp::Triangle::Lower   };
+  std::array< blacspp::Diagonal, 2 > diags = { blacspp::Diagonal::Unit,  blacspp::Diagonal::NonUnit };
+
 
   SECTION( "Pointer Interface" ) {
 
@@ -124,10 +125,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
     for( auto diag : diags ) {
       if( grid.ipc() == 0) 
         for( int i = 1; i < grid.npc(); ++i )
-          blacspp::trsd2d( grid, &tri, &diag, M, N, data_send.data(), M, 
+          blacspp::trsd2d( grid, tri, diag, M, N, data_send.data(), M, 
             grid.ipr(), i );
       else
-        blacspp::trrv2d(grid, &tri, &diag, M, N, data_recv.data(), M, 
+        blacspp::trrv2d(grid, tri, diag, M, N, data_recv.data(), M, 
           grid.ipr(), 0 );
   
       check(tri, diag);
@@ -142,10 +143,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
     for( auto diag : diags ) {
       if( grid.ipc() == 0) 
         for( int i = 1; i < grid.npc(); ++i )
-          blacspp::trsd2d( grid, &tri, &diag, M, N, data_send, M, 
+          blacspp::trsd2d( grid, tri, diag, M, N, data_send, M, 
             grid.ipr(), i );
       else
-        blacspp::trrv2d(grid, &tri, &diag, M, N, data_recv, M, 
+        blacspp::trrv2d(grid, tri, diag, M, N, data_recv, M, 
           grid.ipr(), 0 );
   
       check(tri, diag);

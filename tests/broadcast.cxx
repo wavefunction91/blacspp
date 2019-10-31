@@ -32,10 +32,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Broadcast", "[broadcast]" ) {
     SECTION( "All" ) {
 
       if( grid.ipc() == 0 and grid.ipr() == 0 ) {
-        blacspp::gebs2d( grid, "All", "i-ring", M, N, data_send.data(), M );
+        blacspp::gebs2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, M, N, data_send.data(), M );
         for( auto x : data_recv ) CHECK( x == TestType(-1) );
       } else {
-        blacspp::gebr2d( grid, "All", "i-ring", M, N, data_recv.data(), M );
+        blacspp::gebr2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, M, N, data_recv.data(), M );
         for( auto x : data_recv ) CHECK( x == TestType(0) );
       }
 
@@ -44,10 +44,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Broadcast", "[broadcast]" ) {
     SECTION( "Row" ) {
 
       if( grid.ipc() == 0 ) {
-        blacspp::gebs2d( grid, "Row", "i-ring", M, N, data_send.data(), M );
+        blacspp::gebs2d( grid, blacspp::Scope::Row, blacspp::Topology::IRing, M, N, data_send.data(), M );
         for( auto x : data_recv ) CHECK( x == TestType(-1) );
       } else {
-        blacspp::gebr2d( grid, "Row", "i-ring", M, N, data_recv.data(), M );
+        blacspp::gebr2d( grid, blacspp::Scope::Row, blacspp::Topology::IRing, M, N, data_recv.data(), M );
         for( auto x : data_recv ) CHECK( x == TestType(col_rank) );
       }
 
@@ -56,10 +56,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Broadcast", "[broadcast]" ) {
     SECTION( "Column" ) {
 
       if( grid.ipr() == 0 ) {
-        blacspp::gebs2d( grid, "Column", "i-ring", M, N, data_send.data(), M );
+        blacspp::gebs2d( grid, blacspp::Scope::Column, blacspp::Topology::IRing, M, N, data_send.data(), M );
         for( auto x : data_recv ) CHECK( x == TestType(-1) );
       } else {
-        blacspp::gebr2d( grid, "Column", "i-ring", M, N, data_recv.data(), M );
+        blacspp::gebr2d( grid, blacspp::Scope::Column, blacspp::Topology::IRing, M, N, data_recv.data(), M );
         for( auto x : data_recv ) CHECK( x == TestType(row_rank) );
       }
 
@@ -78,10 +78,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Broadcast", "[broadcast]" ) {
     // Row and Col checks are redundant
 
     if( grid.ipc() == 0 and grid.ipr() == 0 ) {
-      blacspp::gebs2d( grid, "All", "i-ring", M, N, data_send, M );
+      blacspp::gebs2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, M, N, data_send, M );
       for( auto x : data_recv ) CHECK( x == TestType(-1) );
     } else {
-      blacspp::gebr2d( grid, "All", "i-ring", M, N, data_recv, M );
+      blacspp::gebr2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, M, N, data_recv, M );
       for( auto x : data_recv ) CHECK( x == TestType(0) );
     }
 
@@ -92,10 +92,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Broadcast", "[broadcast]" ) {
     // Row and Col checks are redundant
 
     if( grid.ipc() == 0 and grid.ipr() == 0 ) {
-      blacspp::gebs2d( grid, "All", "i-ring", data_send );
+      blacspp::gebs2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, data_send );
       for( auto x : data_recv ) CHECK( x == TestType(-1) );
     } else {
-      blacspp::gebr2d( grid, "All", "i-ring", data_recv );
+      blacspp::gebr2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, data_recv );
       for( auto x : data_recv ) CHECK( x == TestType(0) );
     }
 
@@ -125,19 +125,19 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Broadcast", "[broadcast]" ) {
   std::vector< TestType > data_recv( M*N, TestType(-1) );
 
   auto check_triangle = 
-    [&]( const char tri, const char diag, const auto& data, const TestType val ) {
+    [&]( blacspp::Triangle tri, blacspp::Diagonal diag, const auto& data, const TestType val ) {
       for( auto i = 0; i < M; ++i )
       for( auto j = 0; j < N; ++j ) {
         auto x = data[ i + j * M ];
-        if( diag == 'U' and i == j )     CHECK( x == TestType(-1) );
-        else if( tri == 'U' and j >= i ) CHECK( x == val );
-        else if( tri == 'L' and i >= j ) CHECK( x == val );
-        else                             CHECK( x == TestType(-1) ); 
+        if( diag == blacspp::Diagonal::Unit and i == j )      CHECK( x == TestType(-1) );
+        else if( tri == blacspp::Triangle::Upper and j >= i ) CHECK( x == val );
+        else if( tri == blacspp::Triangle::Lower and i >= j ) CHECK( x == val );
+        else                                                  CHECK( x == TestType(-1) ); 
       }
     }; 
 
-  std::array<char,2> tris  = { 'U', 'L' };
-  std::array<char,2> diags = { 'U', 'N' };
+  std::array< blacspp::Triangle, 2 > tris  = { blacspp::Triangle::Upper, blacspp::Triangle::Lower   };
+  std::array< blacspp::Diagonal, 2 > diags = { blacspp::Diagonal::Unit,  blacspp::Diagonal::NonUnit };
 
   SECTION( "Pointer Interface" ) {
 
@@ -148,10 +148,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Broadcast", "[broadcast]" ) {
       for( auto diag : diags ) {
 
         if( grid.ipc() == 0 and grid.ipr() == 0 ) {
-          blacspp::trbs2d( grid, "All", "i-ring", &tri, &diag, M, N, data_send.data(), M );
+          blacspp::trbs2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, tri, diag, M, N, data_send.data(), M );
           for( auto x : data_recv ) CHECK( x == TestType(-1) );
         } else {
-          blacspp::trbr2d( grid, "All", "i-ring", &tri, &diag, M, N, data_recv.data(), M );
+          blacspp::trbr2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, tri, diag, M, N, data_recv.data(), M );
           check_triangle( tri, diag, data_recv, 0 );
         }
 
@@ -166,10 +166,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Broadcast", "[broadcast]" ) {
       for( auto diag : diags ) {
 
         if( grid.ipc() == 0 ) {
-          blacspp::trbs2d( grid, "Row", "i-ring", &tri, &diag, M, N, data_send.data(), M );
+          blacspp::trbs2d( grid, blacspp::Scope::Row, blacspp::Topology::IRing, tri, diag, M, N, data_send.data(), M );
           for( auto x : data_recv ) CHECK( x == TestType(-1) );
         } else {
-          blacspp::trbr2d( grid, "Row", "i-ring", &tri, &diag, M, N, data_recv.data(), M );
+          blacspp::trbr2d( grid, blacspp::Scope::Row, blacspp::Topology::IRing, tri, diag, M, N, data_recv.data(), M );
           check_triangle( tri, diag, data_recv, col_rank );
         }
 
@@ -185,10 +185,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Broadcast", "[broadcast]" ) {
       for( auto diag : diags ) {
 
         if( grid.ipr() == 0 ) {
-          blacspp::trbs2d( grid, "Column", "i-ring", &tri, &diag, M, N, data_send.data(), M );
+          blacspp::trbs2d( grid, blacspp::Scope::Column, blacspp::Topology::IRing, tri, diag, M, N, data_send.data(), M );
           for( auto x : data_recv ) CHECK( x == TestType(-1) );
         } else {
-          blacspp::trbr2d( grid, "Column", "i-ring", &tri, &diag, M, N, data_recv.data(), M );
+          blacspp::trbr2d( grid, blacspp::Scope::Column, blacspp::Topology::IRing, tri, diag, M, N, data_recv.data(), M );
           check_triangle( tri, diag, data_recv, row_rank );
         }
 
@@ -208,10 +208,10 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Broadcast", "[broadcast]" ) {
     for( auto diag : diags ) {
 
       if( grid.ipc() == 0 and grid.ipr() == 0 ) {
-        blacspp::trbs2d( grid, "All", "i-ring", &tri, &diag, M, N, data_send, M );
+        blacspp::trbs2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, tri, diag, M, N, data_send, M );
         for( auto x : data_recv ) CHECK( x == TestType(-1) );
       } else {
-        blacspp::trbr2d( grid, "All", "i-ring", &tri, &diag, M, N, data_recv, M );
+        blacspp::trbr2d( grid, blacspp::Scope::All, blacspp::Topology::IRing, tri, diag, M, N, data_recv, M );
         check_triangle( tri, diag, data_recv, 0 );
       }
 

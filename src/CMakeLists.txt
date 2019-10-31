@@ -4,6 +4,7 @@ set( BLACS_SRC broadcast.cxx
                support.cxx
                mpi_info.cxx
                grid.cxx
+               type_conversions.cxx
 )
 
 add_library( blacspp ${BLACS_SRC} )

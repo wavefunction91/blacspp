@@ -1,6 +1,7 @@
 #pragma once
 #include <blacspp/grid.hpp>
 #include <blacspp/wrappers/broadcast.hpp>
+#include <blacspp/util/type_conversions.hpp>
 
 
 
@@ -26,10 +27,12 @@ namespace blacspp {
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T>
-  gebs2d( const Grid& grid, const char* SCOPE, const char* TOP,
+  gebs2d( const Grid& grid, const Scope scope, const Topology top,
           const blacs_int M, const blacs_int N, const T* A, const blacs_int LDA ) {
 
-  wrappers::gebs2d( grid.context(), SCOPE, TOP, M, N, A, LDA );
+  auto SCOPE = detail::type_string( scope );
+  auto TOP   = detail::type_string( top   );
+  wrappers::gebs2d( grid.context(), SCOPE.c_str(), TOP.c_str(), M, N, A, LDA );
 
 }
 
@@ -55,11 +58,11 @@ detail::enable_if_blacs_supported_t<T>
  */
 template <class Container>
 std::enable_if_t< detail::has_data_member_v<Container> >
-  gebs2d( const Grid& grid, const char* SCOPE, const char* TOP, 
+  gebs2d( const Grid& grid, const Scope scope, const Topology top,
           const blacs_int M, const blacs_int N, const Container& A, 
           const blacs_int LDA ) {
 
-  gebs2d( grid, SCOPE, TOP, M, N, A.data(), LDA );
+  gebs2d( grid, scope, top, M, N, A.data(), LDA );
 
 }
 
@@ -83,10 +86,10 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  */
 template <class Container>
 std::enable_if_t< detail::has_size_member_v<Container> >
-  gebs2d( const Grid& grid, const char* SCOPE, const char* TOP, 
+  gebs2d( const Grid& grid, const Scope scope, const Topology top,
           const Container& A ) {
 
-  gebs2d( grid, SCOPE, TOP, A.size(), 1, A, A.size() );
+  gebs2d( grid, scope, top, A.size(), 1, A, A.size() );
 
 }
 
@@ -112,11 +115,16 @@ std::enable_if_t< detail::has_size_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trbs2d( const Grid& grid, const char* SCOPE, const char* TOP, 
-          const char* UPLO, const char* DIAG, 
+  trbs2d( const Grid& grid, const Scope scope, const Topology top,
+          const Triangle uplo, const Diagonal diag,
           const blacs_int M, const blacs_int N, const T* A, const blacs_int LDA ) {
 
-  wrappers::trbs2d( grid.context(), SCOPE, TOP, UPLO, DIAG, M, N, A, LDA );
+  auto SCOPE = detail::type_string( scope );
+  auto TOP   = detail::type_string( top   );
+  auto UPLO  = detail::type_string( uplo  );
+  auto DIAG  = detail::type_string( diag  );
+
+  wrappers::trbs2d( grid.context(), SCOPE.c_str(), TOP.c_str(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA );
 
 }
 
@@ -143,12 +151,12 @@ detail::enable_if_blacs_supported_t<T>
  */
 template <class Container>
 std::enable_if_t< detail::has_data_member_v<Container> >
-  trbs2d( const Grid& grid, const char* SCOPE, const char* TOP, 
-          const char* UPLO, const char* DIAG, 
+  trbs2d( const Grid& grid, const Scope scope, const Topology top,
+          const Triangle uplo, const Diagonal diag,
           const blacs_int M, const blacs_int N, const Container& A, 
           const blacs_int LDA ) {
 
-  trbs2d( grid, SCOPE, TOP, UPLO, DIAG, M, N, A.data(), LDA );
+  trbs2d( grid, scope, top, uplo, diag, M, N, A.data(), LDA );
 
 }
 
@@ -184,10 +192,12 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gebr2d( const Grid& grid, const char* SCOPE, const char* TOP, 
+  gebr2d( const Grid& grid, const Scope scope, const Topology top,
           const blacs_int M, const blacs_int N, T* A, const blacs_int LDA ) {
 
-  wrappers::gebr2d( grid.context(), SCOPE, TOP, M, N, A, LDA );
+  auto SCOPE = detail::type_string( scope );
+  auto TOP   = detail::type_string( top   );
+  wrappers::gebr2d( grid.context(), SCOPE.c_str(), TOP.c_str(), M, N, A, LDA );
 
 }
 
@@ -212,10 +222,10 @@ detail::enable_if_blacs_supported_t<T>
  */
 template <class Container>
 std::enable_if_t< detail::has_data_member_v<Container> >
-  gebr2d( const Grid& grid, const char* SCOPE, const char* TOP, 
+  gebr2d( const Grid& grid, const Scope scope, const Topology top,
           const blacs_int M, const blacs_int N, Container& A, const blacs_int LDA ) {
 
-  gebr2d( grid, SCOPE, TOP, M, N, A.data(), LDA );
+  gebr2d( grid, scope, top, M, N, A.data(), LDA );
 
 }
 
@@ -238,9 +248,9 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  */
 template <class Container>
 std::enable_if_t< detail::has_size_member_v<Container> >
-  gebr2d( const Grid& grid, const char* SCOPE, const char* TOP, Container& A ) { 
+  gebr2d( const Grid& grid, const Scope scope, const Topology top, Container& A ) { 
 
-  gebr2d( grid, SCOPE, TOP, A.size(), 1, A, A.size() );
+  gebr2d( grid, scope, top, A.size(), 1, A, A.size() );
 
 }
 
@@ -265,11 +275,16 @@ std::enable_if_t< detail::has_size_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trbr2d( const Grid& grid, const char* SCOPE, const char* TOP, 
-          const char* UPLO, const char* DIAG, 
+  trbr2d( const Grid& grid, const Scope scope, const Topology top,
+          const Triangle uplo, const Diagonal diag,
           const blacs_int M, const blacs_int N, T* A, const blacs_int LDA ) { 
 
-  wrappers::trbr2d( grid.context(), SCOPE, TOP, UPLO, DIAG, M, N, A, LDA );
+  auto SCOPE = detail::type_string( scope );
+  auto TOP   = detail::type_string( top   );
+  auto UPLO  = detail::type_string( uplo  );
+  auto DIAG  = detail::type_string( diag  );
+
+  wrappers::trbr2d( grid.context(), SCOPE.c_str(), TOP.c_str(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA );
 
 }
 
@@ -296,11 +311,11 @@ detail::enable_if_blacs_supported_t<T>
  */
 template <class Container>
 std::enable_if_t< detail::has_data_member_v<Container> >
-  trbr2d( const Grid& grid, const char* SCOPE, const char* TOP, 
-          const char* UPLO, const char* DIAG, 
+  trbr2d( const Grid& grid, const Scope scope, const Topology top,
+          const Triangle uplo, const Diagonal diag,
           const blacs_int M, const blacs_int N, Container& A, const blacs_int LDA ) {
 
-  trbr2d( grid, SCOPE, TOP, UPLO, DIAG, M, N, A.data(), LDA );
+  trbr2d( grid, scope, top, uplo, diag, M, N, A.data(), LDA );
 
 }
 

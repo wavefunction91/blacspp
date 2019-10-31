@@ -1,6 +1,7 @@
 #pragma once
 #include <blacspp/grid.hpp>
 #include <blacspp/wrappers/send_recv.hpp>
+#include <blacspp/util/type_conversions.hpp>
 
 namespace blacspp {
 
@@ -118,11 +119,14 @@ std::enable_if_t< detail::has_size_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trsd2d( const Grid& grid, const char* UPLO, const char* DIAG, 
+  trsd2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
           const blacs_int M, const blacs_int N, const T* A, const blacs_int LDA, 
           const blacs_int RDEST, const blacs_int CDEST ) {
 
-  wrappers::trsd2d( grid.context(), UPLO, DIAG, M, N, A, LDA, RDEST, CDEST );
+  auto UPLO = detail::type_string( uplo );
+  auto DIAG = detail::type_string( diag );
+
+  wrappers::trsd2d( grid.context(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA, RDEST, CDEST );
 
 }
 
@@ -151,11 +155,11 @@ detail::enable_if_blacs_supported_t<T>
  */
 template <class Container>
 std::enable_if_t< detail::has_data_member_v<Container> >
-  trsd2d( const Grid& grid, const char* UPLO, const char* DIAG, 
+  trsd2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
           const blacs_int M, const blacs_int N, const Container& A, 
           const blacs_int LDA, const blacs_int RDEST, const blacs_int CDEST ) {
 
-  trsd2d( grid, UPLO, DIAG, M, N, A.data(), LDA, RDEST, CDEST );
+  trsd2d( grid, uplo, diag, M, N, A.data(), LDA, RDEST, CDEST );
 
 }
 
@@ -283,11 +287,14 @@ std::enable_if_t< detail::has_size_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trrv2d( const Grid& grid, const char* UPLO, const char* DIAG, 
+  trrv2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
           const blacs_int M, const blacs_int N, T* A, const blacs_int LDA, 
           const blacs_int RSRC, const blacs_int CSRC ) {
 
-  wrappers::trrv2d( grid.context(), UPLO, DIAG, M, N, A, LDA, RSRC, CSRC );
+  auto UPLO = detail::type_string( uplo );
+  auto DIAG = detail::type_string( diag );
+
+  wrappers::trrv2d( grid.context(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA, RSRC, CSRC );
 
 }
 
@@ -316,11 +323,11 @@ detail::enable_if_blacs_supported_t<T>
  */
 template <class Container>
 std::enable_if_t< detail::has_data_member_v<Container> >
-  trrv2d( const Grid& grid, const char* UPLO, const char* DIAG, 
+  trrv2d( const Grid& grid,  const Triangle uplo, const Diagonal diag,
           const blacs_int M, const blacs_int N, Container& A, 
           const blacs_int LDA, const blacs_int RSRC, const blacs_int CSRC ) {
 
-  trrv2d( grid, UPLO, DIAG, M, N, A.data(), LDA, RSRC, CSRC );
+  trrv2d( grid, uplo, diag, M, N, A.data(), LDA, RSRC, CSRC );
 
 }
 

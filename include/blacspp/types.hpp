@@ -67,4 +67,25 @@ namespace blacspp {
   };
 
 
+
+  enum Triangle {
+    Upper,
+    Lower
+  };
+
+  enum Diagonal {
+    Unit,
+    NonUnit
+  };
+
+  enum Scope {
+    All,
+    Row,
+    Column
+  };
+
+  enum Topology {
+    IRing
+  };
+
 }
