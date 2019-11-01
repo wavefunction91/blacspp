@@ -1,5 +1,6 @@
 #include <blacspp/grid.hpp>
 #include <blacspp/wrappers/support.hpp>
+#include <blacspp/util/type_conversions.hpp>
 
 #include <cstdio>
 
@@ -8,6 +9,14 @@ namespace blacspp {
 bool Grid::is_valid() const {
   return mpi_info_.comm() != MPI_COMM_NULL;
 }
+
+
+void Grid::barrier( Scope scope ) const noexcept {
+  auto SCOPE = detail::type_string( scope );
+  wrappers::barrier( context(), SCOPE.c_str() );
+}
+
+
 
 Grid::Grid() : Grid( MPI_COMM_NULL, 0, 0 ){ }
 

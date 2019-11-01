@@ -2,6 +2,7 @@
 
 #include <complex>
 #include <mpi.h>
+#include <utility>
 
 namespace blacspp {
 
@@ -13,6 +14,9 @@ namespace blacspp {
 
   /// Type for double precision complex floating point numbers
   using dcomplex  = std::complex< double >;
+
+
+  using process_coordinate = std::pair< blacs_int, blacs_int >;
 
   /**
    *  \brief A struct to manage basic BLACS grid information

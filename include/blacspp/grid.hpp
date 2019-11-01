@@ -126,6 +126,16 @@ public:
   inline MPI_Comm  comm()    const noexcept { return mpi_info_.comm(); }
 
 
+
+
+
+  void barrier( Scope ) const noexcept;
+
+
+
+
+
+
   /**
    *  \brief Constuct a close-to-square BLACS Grid.
    *

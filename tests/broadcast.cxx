@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 #include <blacspp/broadcast.hpp>
+#include <blacspp/information.hpp>
 #include <vector>
-#include <blacspp/wrappers/support.hpp>
 
 #define BLACSPP_TEMPLATE_TEST_CASE(NAME, CAT)\
 TEMPLATE_TEST_CASE(NAME,CAT,blacspp::blacs_int, float, double, blacspp::scomplex, blacspp::dcomplex)
@@ -16,8 +16,8 @@ TEMPLATE_TEST_CASE(NAME,CAT,blacspp::blacs_int, float, double, blacspp::scomplex
 BLACSPP_TEMPLATE_TEST_CASE( "General 2D Broadcast", "[broadcast]" ) {
 
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
-  auto row_rank = blacspp::wrappers::pnum( grid.context(), 0, grid.ipc() );
-  auto col_rank = blacspp::wrappers::pnum( grid.context(), grid.ipr(), 0 );
+  auto row_rank = blacspp::coordinate_rank( grid, 0, grid.ipc() );
+  auto col_rank = blacspp::coordinate_rank( grid, grid.ipr(), 0 );
 
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
@@ -114,8 +114,8 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Broadcast", "[broadcast]" ) {
 BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Broadcast", "[broadcast]" ) {
 
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
-  auto row_rank = blacspp::wrappers::pnum( grid.context(), 0, grid.ipc() );
-  auto col_rank = blacspp::wrappers::pnum( grid.context(), grid.ipr(), 0 );
+  auto row_rank = blacspp::coordinate_rank( grid, 0, grid.ipc() );
+  auto col_rank = blacspp::coordinate_rank( grid, grid.ipr(), 0 );
 
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 

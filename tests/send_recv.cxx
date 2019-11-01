@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 #include <blacspp/send_recv.hpp>
+#include <blacspp/information.hpp>
 #include <vector>
-#include <blacspp/wrappers/support.hpp>
 
 #define BLACSPP_TEMPLATE_TEST_CASE(NAME, CAT)\
 TEMPLATE_TEST_CASE(NAME,CAT,blacspp::blacs_int, float, double, blacspp::scomplex, blacspp::dcomplex)
@@ -23,7 +23,7 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Send-Recv", "[send-recv]" ) {
     for( auto x : data_send ) CHECK( x == TestType(mpi.rank()) );
 
     // Get the rank for the first column
-    int rank_col = blacspp::wrappers::pnum( grid.context(), grid.ipr(), 0 );
+    int rank_col = blacspp::coordinate_rank( grid, grid.ipr(), 0 );
 
     // Check that recv data is correct
     if( grid.ipc() == 0 )
@@ -92,7 +92,7 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
     for( auto x : data_send ) CHECK( x == TestType(mpi.rank()) );
 
     // Get the rank for the first column
-    int rank_col = blacspp::wrappers::pnum( grid.context(), grid.ipr(), 0 );
+    int rank_col = blacspp::coordinate_rank( grid, grid.ipr(), 0 );
 
     // Check that recv data is correct
     if( grid.ipc() == 0 )
