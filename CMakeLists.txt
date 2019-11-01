@@ -9,8 +9,5 @@ else()
 endif()
 list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
 
-
-find_package( BLACS REQUIRED )
-
 add_subdirectory( src )
 add_subdirectory( tests )

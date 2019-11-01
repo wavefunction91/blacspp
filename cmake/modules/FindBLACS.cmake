@@ -13,6 +13,11 @@ fill_out_prefix( blacs )
 # MPI
 if( NOT TARGET MPI::MPI_C )
 
+  get_property(languages GLOBAL PROPERTY ENABLED_LANGUAGES)
+  if( NOT "C" IN_LIST languages )
+    enable_language( C )
+  endif()
+
   find_dependency( MPI )
 
 endif()
