@@ -19,11 +19,11 @@ matrix:
   include:
     - compiler: gcc
       env: GCC_VERSION=7 BUILD_TYPE=Debug
-      sources:
-        - sourceline: 'deb https://apt.kitware.com/ubuntu/ bionic main'
-          key_url: 'https://apt.kitware.com/keys/kitware-archive-latest.asc'
       addons:
         apt:
+          sources:
+            - sourceline: 'deb https://apt.kitware.com/ubuntu/ bionic main'
+              key_url: 'https://apt.kitware.com/keys/kitware-archive-latest.asc'
           packages:
             - *base_packages
             - g++-7
