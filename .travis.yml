@@ -25,24 +25,18 @@ matrix:
             - sourceline: 'deb https://apt.kitware.com/ubuntu/ bionic main'
               key_url: 'https://apt.kitware.com/keys/kitware-archive-latest.asc'
           packages:
-            - *base_packages
             - g++-7
             - gfortran-7
-            - libscalapack-mpich-dev
-    - compiler: gcc
-      env: GCC_VERSION=7 BUILD_TYPE=Release
-      addons:
-        apt:
-          packages:
             - *base_packages
-            - g++-7
-            - gfortran-7
+            - mpich
             - libscalapack-mpich-dev
 
 
 
 before_install:
   - env
+  - test -n $CC  && unset CC
+  - test -n $CXX && unset CXX
   - mkdir -p ${BUILD_PREFIX} && mkdir -p ${INSTALL_PREFIX}
 script:
   - echo $PWD
