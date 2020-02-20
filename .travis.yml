@@ -3,12 +3,13 @@ dist:     bionic
 os:       linux
 
 addons:
+  sources:
+    - sourceline: 'deb https://apt.kitware.com/ubuntu/ bionic main'
   apt:
     packages: &base_packages
+    - cmake
     - libblas-dev
     - liblapack-dev
-    - cmake
-    - cmake-data
 
 env:
   global:
