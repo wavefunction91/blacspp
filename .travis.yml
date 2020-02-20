@@ -28,7 +28,7 @@ matrix:
             - g++-7
             - gfortran-7
             - *base_packages
-            - mpich
+            - libmpich-dev
             - libscalapack-mpich-dev
 
 
