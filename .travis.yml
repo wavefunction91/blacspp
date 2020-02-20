@@ -44,3 +44,6 @@ script:
 after_failure:
   - cat ${BUILD_PREFIX}/CMakeFiles/CMakeError.log
   - cat ${BUILD_PREFIX}/CMakeFiles/CMakeOutput.log
+  - cat ${BUILD_PREFIX}/Testing/Temporary/LastTest.log
+after_success:
+  - cat ${BUILD_PREFIX}/Testing/Temporary/LastTest.log
