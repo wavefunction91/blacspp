@@ -1,10 +1,6 @@
 language: cpp
 dist:     bionic
-cache:    ccache
-cache:
-  directories:
-  - /home/travis/_install
-os: linux
+os:       linux
 
 addons:
   apt:
@@ -47,4 +43,5 @@ before_install:
   - env
   - mkdir -p ${BUILD_PREFIX} && mkdir -p ${INSTALL_PREFIX}
 script:
-  - echo "HERE"
+  - echo $PWD
+  - bash ./scripts/build_travis.sh
