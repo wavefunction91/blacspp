@@ -1,0 +1,50 @@
+language: cpp
+dist:     bionic
+cache:    ccache
+cache:
+  directories:
+  - /home/travis/_install
+os: linux
+
+addons:
+  apt:
+    packages: &base_packages
+    - libblas-dev
+    - liblapack-dev
+    - cmake
+    - cmake-data
+
+env:
+  global:
+    - BUILD_PREFIX=/home/travis/_build
+    - INSTALL_PREFIX=/home/travis/_install
+
+
+matrix:
+  include:
+    - compiler: gcc
+      env: GCC_VERSION=7 BUILD_TYPE=Debug
+      addons:
+        apt:
+          packages:
+            - *base_packages
+            - g++-7
+            - gfortran-7
+            - libscalapack-mpich-dev
+    - compiler: gcc
+      env: GCC_VERSION=7 BUILD_TYPE=Release
+      addons:
+        apt:
+          packages:
+            - *base_packages
+            - g++-7
+            - gfortran-7
+            - libscalapack-mpich-dev
+
+
+
+before_install:
+  - env
+  - mkdir -p ${BUILD_PREFIX} && mkdir -p ${INSTALL_PREFIX}
+script:
+  - echo "HERE"
