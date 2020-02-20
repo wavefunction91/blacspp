@@ -41,3 +41,6 @@ before_install:
 script:
   - echo $PWD
   - bash ./scripts/build_travis.sh
+after_failure:
+  - cat ${BUILD_PREFIX}/CMakeFiles/CMakeError.log
+  - cat ${BUILD_PREFIX}/CMakeFiles/CMakeOutput.log
