@@ -1,0 +1,49 @@
+language: cpp
+dist:     bionic
+os:       linux
+
+addons:
+  apt:
+    packages: &base_packages
+    - cmake
+    - libblas-dev
+    - liblapack-dev
+
+env:
+  global:
+    - BUILD_PREFIX=/home/travis/_build
+    - INSTALL_PREFIX=/home/travis/_install
+
+
+matrix:
+  include:
+    - compiler: gcc
+      env: GCC_VERSION=7 BUILD_TYPE=Debug
+      addons:
+        apt:
+          sources:
+            - sourceline: 'deb https://apt.kitware.com/ubuntu/ bionic main'
+              key_url: 'https://apt.kitware.com/keys/kitware-archive-latest.asc'
+          packages:
+            - g++-7
+            - gfortran-7
+            - *base_packages
+            - libmpich-dev
+            - libscalapack-mpich-dev
+
+
+
+before_install:
+  - env
+  - test -n $CC  && unset CC
+  - test -n $CXX && unset CXX
+  - mkdir -p ${BUILD_PREFIX} && mkdir -p ${INSTALL_PREFIX}
+script:
+  - echo $PWD
+  - bash ./scripts/build_travis.sh
+after_failure:
+  - cat ${BUILD_PREFIX}/CMakeFiles/CMakeError.log
+  - cat ${BUILD_PREFIX}/CMakeFiles/CMakeOutput.log
+  - cat ${BUILD_PREFIX}/Testing/Temporary/LastTest.log
+after_success:
+  - cat ${BUILD_PREFIX}/Testing/Temporary/LastTest.log
