@@ -33,6 +33,11 @@ if( NOT blacs_LIBRARIES )
     PATH_SUFFICES lib lib64 lib32
   )
 
+  # record where found BLACS to use as a search hint downstream
+  if (BLACS_LIBRARIES)
+    get_filename_component(blacs_LIBRARY_DIR "${BLACS_LIBRARIES}" DIRECTORY CACHE)
+  endif (BLACS_LIBRARIES)
+
 else()
 
   message( STATUS "BLACS LIBRARY WAS SET BY USER: ${blacs_LIBRARIES}" )
