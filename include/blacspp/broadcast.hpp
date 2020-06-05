@@ -1,3 +1,9 @@
+/**
+ *  This file is a part of blacspp (see LICENSE)
+ *
+ *  Copyright (c) 2019-2020 David Williams-Young
+ *  All rights reserved
+ */
 #pragma once
 #include <blacspp/grid.hpp>
 #include <blacspp/wrappers/broadcast.hpp>

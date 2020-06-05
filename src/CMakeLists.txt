@@ -1,3 +1,9 @@
+#
+# This file is a part of blacspp (see LICENSE)
+#
+# Copyright (c) 2019-2020 David Williams-Young
+# All rights reserved
+#
 find_package( BLACS REQUIRED )
 
 set( BLACS_SRC broadcast.cxx

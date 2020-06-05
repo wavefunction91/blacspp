@@ -1,3 +1,9 @@
+/**
+ *  This file is a part of blacspp (see LICENSE)
+ *
+ *  Copyright (c) 2019-2020 David Williams-Young
+ *  All rights reserved
+ */
 #include <blacspp/wrappers/combine.hpp>
 
 using blacspp::blacs_int;
