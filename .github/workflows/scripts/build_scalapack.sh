@@ -2,9 +2,9 @@
 
 # Exit on error
 set -ev
-export CC=/usr/bin/gcc
-export CXX=/usr/bin/g++
-export FC=/usr/bin/gfortran
+export CC=mpicc
+export CXX=mpicxx
+export FC=mpifort
 
 # Print compiler information
 $CC --version
@@ -19,6 +19,6 @@ cd scalapack
 
 export INSTALL_DIR=$1
 export BUILD_DIR=$2
-cmake -H. -B$BUILD_DIR -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DCMAKE_C_COMPILER=$CC \
+cmake -H. -B$BUILD_DIR -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DCMAKE_PREFIX_PATH=$MPICH_PREFIX -DCMAKE_C_COMPILER=$CC \
       -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_Fortran_COMPILER=$FC
 make -C $BUILD_DIR -j2 install

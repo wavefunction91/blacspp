@@ -33,6 +33,7 @@ jobs:
 
     - name: Build NETLIB ScaLAPACK
       env:
+        MPICH_PREFIX: ${{runner.workspace}}/install/mpich
         SCALAPACK_PREFIX: ${{runner.workspace}}/install/scalapack
         SCALAPACK_BIN_DIR: ${{runner.workspace}}/deps/scalapack
       run: .github/workflows/scripts/build_scalapack.sh ${SCALAPACK_PREFIX} ${SCALAPACK_BIN_DIR} 
