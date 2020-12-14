@@ -36,7 +36,7 @@ else()
   include( FetchContent )
   FetchContent_Declare( catch2
     GIT_REPOSITORY      https://github.com/catchorg/Catch2.git
-    GIT_TAG             master
+    GIT_TAG             main
     UPDATE_DISCONNECTED 1
   )
 
