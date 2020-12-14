@@ -26,14 +26,10 @@ jobs:
            export PATH=${CMAKE_PREFIX}/bin:${PATH} && cmake --version
 
     - name: Build MPICH
-      env:
-        MPICH_PREFIX: ${{runner.workspace}}/install/mpich
-      run: .github/workflows/scripts/build_mpich.sh  ${MPICH_PREFIX} &&
-           export PATH=${MPICH_PREFIX}/bin:${PATH} && mpicc --version
+      run: sudo apt-get install mpich libmpich-dev
 
     - name: Build NETLIB ScaLAPACK
       env:
-        MPICH_PREFIX: ${{runner.workspace}}/install/mpich
         SCALAPACK_PREFIX: ${{runner.workspace}}/install/scalapack
         SCALAPACK_BIN_DIR: ${{runner.workspace}}/deps/scalapack
       run: .github/workflows/scripts/build_scalapack.sh ${SCALAPACK_PREFIX} ${SCALAPACK_BIN_DIR} 
