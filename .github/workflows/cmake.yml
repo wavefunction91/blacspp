@@ -28,7 +28,7 @@ jobs:
     - name: Build MPICH
       env:
         MPICH_PREFIX: ${{runner.workspace}}/install/mpich
-      run: ./github/workflows/scripts/build_mpich.sh  ${MPICH_PREFIX} &&
+      run: .github/workflows/scripts/build_mpich.sh  ${MPICH_PREFIX} &&
            export PATH=${MPICH_PREFIX}/bin:${PATH} && mpicc --version
 
     - name: Create Build Environment
