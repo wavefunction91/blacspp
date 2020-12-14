@@ -7,7 +7,7 @@ export CXX=mpicxx
 export FC=mpifort
 
 # Print compiler information
-echo $PREFIX
+echo $PATH
 $CC --version
 $CXX --version
 $FC --version
