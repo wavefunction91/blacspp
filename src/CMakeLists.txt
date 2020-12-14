@@ -4,7 +4,9 @@
 # Copyright (c) 2019-2020 David Williams-Young
 # All rights reserved
 #
-find_package( BLACS REQUIRED )
+if( NOT TARGET ScaLAPACK::ScaLAPACK )
+  find_package( ScaLAPACK REQUIRED )
+endif()
 
 set( BLACS_SRC broadcast.cxx
                combine.cxx
@@ -47,7 +49,7 @@ target_include_directories( blacspp PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries( blacspp PUBLIC BLACS::BLACS )
+target_link_libraries( blacspp PUBLIC ScaLAPACK::ScaLAPACK )
 
 
 
@@ -110,12 +112,12 @@ configure_package_config_file(
 
 # Install misc cmake modules
 install( FILES
-  ${PROJECT_SOURCE_DIR}/cmake/modules/CommonFunctions.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindBLACS.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/blacspp-config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/blacspp-config-version.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
 )
   
-
+# Install Custom Find Modules
+include( ${linalg-cmake-modules_SOURCE_DIR}/LinAlgModulesMacros.cmake )
+install_linalg_modules( INSTALL_CONFIGDIR )
 

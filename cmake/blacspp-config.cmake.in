@@ -2,13 +2,19 @@ cmake_minimum_required( VERSION 3.13 FATAL_ERROR )
 
 get_filename_component( blacspp_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH )
 
-list( APPEND CMAKE_MODULE_PATH ${blacspp_CMAKE_DIR} )
-include( CMakeFindDependencyMacro )
-set(blacs_LIBRARY_DIR "@blacs_LIBRARY_DIR@")
-if (NOT blacs_LIBRARY_DIR)
-  set(blacs_LIBRARIES "@blacs_LIBRARIES@")
-endif(NOT blacs_LIBRARY_DIR)
-find_dependency( BLACS MODULE )
+list( APPEND CMAKE_MODULE_PATH ${blacspp_CMAKE_DIR}/linalg-cmake-modules )
+if( NOT TARGET ScaLAPACK::ScaLAPACK )
+  include( CMakeFindDependencyMacro )
+  set(ScaLAPACK_LIBRARIES "@ScaLAPACK_LIBRARIES@") # Already discovered CMake
+  enable_language( C )
+  if( MPI::MPI_C IN_LIST ScaLAPACK_LIBRARIES )
+    find_dependency( MPI )
+  endif()
+  if( OpenMP::OpenMP_C IN_LIST ScaLAPACK_LIBRARIES )
+    find_dependency( OpenMP )
+  endif()
+  find_dependency( ScaLAPACK MODULE )
+endif()
 
 
 list(REMOVE_AT CMAKE_MODULE_PATH -1)
