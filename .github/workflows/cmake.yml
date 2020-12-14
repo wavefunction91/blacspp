@@ -35,7 +35,7 @@ jobs:
       env:
         SCALAPACK_PREFIX: ${{runner.workspace}}/install/scalapack
         SCALAPACK_BIN_DIR: ${{runner.workspace}}/deps/scalapack
-      run: .github/workflows/scripts/build_scalapack.sh ${SCALAPACK_PREFIX} ${SCLAPACK_BIN_DIR} 
+      run: .github/workflows/scripts/build_scalapack.sh ${SCALAPACK_PREFIX} ${SCALAPACK_BIN_DIR} 
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
