@@ -7,13 +7,18 @@
 #pragma once
 
 #include <complex>
+#include <cstdint>
 #include <mpi.h>
 #include <utility>
 
 namespace blacspp {
 
   /// Integer type for BLACS operations
+#if defined(BLAS_ILP64)
+  using blacs_int = int64_t;
+#else
   using blacs_int = int32_t;
+#endif
 
   /// Type for single precision complex floating point numbers
   using scomplex  = std::complex< float >;
