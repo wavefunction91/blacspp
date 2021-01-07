@@ -69,6 +69,12 @@ install( TARGETS blacspp
 
 set_target_properties( blacspp PROPERTIES EXPORT_NAME blacspp )
 
+# Export build tree
+export(EXPORT blacspp-targets
+      NAMESPACE blacspp::
+      FILE "${PROJECT_BINARY_DIR}/blacspp-targets.cmake")
+
+
 # Install Headers
 install( 
   FILES ${BLACS_HEADERS} 
