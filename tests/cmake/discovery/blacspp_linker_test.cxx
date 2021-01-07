@@ -1,4 +1,4 @@
-#include <blacs/grid.hpp>
+#include <blacspp/grid.hpp>
 
 int main() {
   MPI_Init( NULL, NULL );
