@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <blacspp/wrappers/broadcast.hpp>
+#include <blacspp/util/type_conversions.hpp>
 
-using blacspp::blacs_int;
-using blacspp::scomplex;
-using blacspp::dcomplex;
+using blacspp::internal::blacs_int;
+using blacspp::internal::scomplex;
+using blacspp::internal::dcomplex;
 
 // Prototypes
 extern "C" {
@@ -91,14 +92,18 @@ namespace wrappers {
 
 // GEBS2D
 #define gebs2d_impl( fname, type ) \
-template <>                                                    \
-void gebs2d<type>(                                             \
-  const blacs_int ICONTXT, const char* SCOPE, const char* TOP, \
-  const blacs_int M, const blacs_int N, const type* A,         \
-  const blacs_int LDA ) {                                      \
-                                                               \
-  fname( ICONTXT, SCOPE, TOP, M, N, A, LDA );                  \
-                                                               \
+template <>                                                  \
+void gebs2d<type>(                                           \
+  const int64_t ICONTXT, const char* SCOPE, const char* TOP, \
+  const int64_t M, const int64_t N, const type* A,           \
+  const int64_t LDA ) {                                      \
+                                                             \
+  auto _M   = detail::to_blacs_int( M   );                   \
+  auto _N   = detail::to_blacs_int( N   );                   \
+  auto _LDA = detail::to_blacs_int( LDA );                   \
+                                                             \
+  fname( ICONTXT, SCOPE, TOP, _M, _N, A, _LDA );             \
+                                                             \
 }
 
 gebs2d_impl( Cigebs2d, blacs_int );
@@ -110,14 +115,18 @@ gebs2d_impl( Czgebs2d, dcomplex  );
 
 // TRBS2D
 #define trbs2d_impl( fname, type ) \
-template <>                                                                 \
-void trbs2d<type>(                                                          \
-  const blacs_int ICONTXT, const char* SCOPE, const char* TOP,              \
-  const char* UPLO, const char* DIAG, const blacs_int M, const blacs_int N, \
-  const type* A, const blacs_int LDA ) {                                    \
-                                                                            \
-  fname( ICONTXT, SCOPE, TOP, UPLO, DIAG, M, N, A, LDA );                   \
-                                                                            \
+template <>                                                             \
+void trbs2d<type>(                                                      \
+  const int64_t ICONTXT, const char* SCOPE, const char* TOP,            \
+  const char* UPLO, const char* DIAG, const int64_t M, const int64_t N, \
+  const type* A, const int64_t LDA ) {                                  \
+                                                                        \
+  auto _M   = detail::to_blacs_int( M   );                              \
+  auto _N   = detail::to_blacs_int( N   );                              \
+  auto _LDA = detail::to_blacs_int( LDA );                              \
+                                                                        \
+  fname( ICONTXT, SCOPE, TOP, UPLO, DIAG, _M, _N, A, _LDA );            \
+                                                                        \
 }
 
 trbs2d_impl( Citrbs2d, blacs_int );
@@ -140,13 +149,17 @@ trbs2d_impl( Cztrbs2d, dcomplex  );
   
 // GEBR2D
 #define gebr2d_impl( fname, type ) \
-template <>                                                              \
-void gebr2d<type>(                                                       \
-  const blacs_int ICONTXT, const char* SCOPE, const char* TOP,           \
-  const blacs_int M, const blacs_int N, type* A, const blacs_int LDA ) { \
-                                                                         \
-  fname( ICONTXT, SCOPE, TOP, M, N, A, LDA );                            \
-                                                                         \
+template <>                                                        \
+void gebr2d<type>(                                                 \
+  const int64_t ICONTXT, const char* SCOPE, const char* TOP,       \
+  const int64_t M, const int64_t N, type* A, const int64_t LDA ) { \
+                                                                   \
+  auto _M   = detail::to_blacs_int( M   );                         \
+  auto _N   = detail::to_blacs_int( N   );                         \
+  auto _LDA = detail::to_blacs_int( LDA );                         \
+                                                                   \
+  fname( ICONTXT, SCOPE, TOP, _M, _N, A, _LDA );                   \
+                                                                   \
 }
 
 gebr2d_impl( Cigebr2d, blacs_int );
@@ -158,14 +171,18 @@ gebr2d_impl( Czgebr2d, dcomplex  );
 
 // TRBR2D
 #define trbr2d_impl( fname, type ) \
-template <>                                                    \
-void trbr2d<type>(                                             \
-  const blacs_int ICONTXT, const char* SCOPE, const char* TOP, \
-  const char* UPLO, const char* DIAG, const blacs_int M,       \
-  const blacs_int N, type* A, const blacs_int LDA ) {          \
-                                                               \
-  fname( ICONTXT, SCOPE, TOP, UPLO, DIAG, M, N, A, LDA );      \
-                                                               \
+template <>                                                  \
+void trbr2d<type>(                                           \
+  const int64_t ICONTXT, const char* SCOPE, const char* TOP, \
+  const char* UPLO, const char* DIAG, const int64_t M,       \
+  const int64_t N, type* A, const int64_t LDA ) {            \
+                                                             \
+  auto _M   = detail::to_blacs_int( M   );                   \
+  auto _N   = detail::to_blacs_int( N   );                   \
+  auto _LDA = detail::to_blacs_int( LDA );                   \
+                                                             \
+  fname( ICONTXT, SCOPE, TOP, UPLO, DIAG, _M, _N, A, _LDA ); \
+                                                             \
 }
 
 trbr2d_impl( Citrbr2d, blacs_int );

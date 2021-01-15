@@ -18,4 +18,5 @@ namespace blacspp::detail {
 
   extern std::string type_string( const Topology top );
 
+  extern internal::blacs_int to_blacs_int( int64_t );
 }

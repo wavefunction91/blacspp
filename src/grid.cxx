@@ -26,7 +26,7 @@ void Grid::barrier( Scope scope ) const noexcept {
 
 Grid::Grid() : Grid( MPI_COMM_NULL, 0, 0 ){ }
 
-Grid::Grid( MPI_Comm c, blacs_int npr, blacs_int npc ) : mpi_info_( c ) {
+Grid::Grid( MPI_Comm c, int64_t npr, int64_t npc ) : mpi_info_( c ) {
 
   if( is_valid() ) {
 
@@ -46,7 +46,7 @@ Grid::Grid( MPI_Comm c, blacs_int npr, blacs_int npc ) : mpi_info_( c ) {
 
 }
 
-Grid::Grid( blacs_grid_dim dim, mpi_info mpi, blacs_int handle, blacs_int context ) :
+Grid::Grid( blacs_grid_dim dim, mpi_info mpi, int64_t handle, int64_t context ) :
   grid_dim_(dim), mpi_info_(mpi), system_handle_(handle), context_(context){ }
 
 Grid::Grid( const Grid& other ) :
@@ -75,8 +75,8 @@ Grid Grid::square_grid( const MPI_Comm& comm ) {
 
   mpi_info info(comm);
  
-  blacs_int npr = std::sqrt( info.size() );
-  blacs_int npc = info.size() / npr; 
+  int64_t npr = std::sqrt( info.size() );
+  int64_t npc = info.size() / npr; 
 
   while( npr * npc != info.size() ) {
     npr--;

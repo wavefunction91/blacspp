@@ -5,6 +5,10 @@
  *  All rights reserved
  */
 #include <blacspp/util/type_conversions.hpp>
+#include <stdexcept>
+#include <sstream>
+#include <limits>
+
 namespace blacspp::detail {
 
   std::string type_string( const Triangle tri ) {
@@ -26,5 +30,21 @@ namespace blacspp::detail {
 
   std::string type_string( const Topology top ) {
     return std::string( "i-ring" );
+  }
+
+
+  internal::blacs_int to_blacs_int( int64_t i ) {
+
+    if( i >= std::numeric_limits<internal::blacs_int>::max() ) {
+      std::stringstream ss;
+      ss << "BLACSPP ENCOUNTERED INTEGER CONVERSION ERROR: "
+         << "  * INTEGER INPUT = " << i 
+         << "  * BLACS INT_MAX = " <<std::numeric_limits<internal::blacs_int>::max();
+
+      throw std::runtime_error( ss.str() );
+    }
+
+    return i;
+
   }
 }

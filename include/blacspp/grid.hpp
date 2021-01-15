@@ -19,8 +19,8 @@ class Grid {
   blacs_grid_dim  grid_dim_; ///< Grid information of constructed grid
   mpi_info        mpi_info_; ///< MPI information for underlying MPI communicator
 
-  blacs_int       system_handle_; ///< BLACS representation of the MPI communicator (system handle)
-  blacs_int       context_;       ///< BLACS context representation of the BLACS grid
+  int64_t       system_handle_; ///< BLACS representation of the MPI communicator (system handle)
+  int64_t       context_;       ///< BLACS context representation of the BLACS grid
   
 
   /**
@@ -37,7 +37,7 @@ class Grid {
    *  @param[in] context  BLACS context (must refer to an already constructed BLACS grid)
    *
    */
-  Grid( blacs_grid_dim dim, mpi_info info, blacs_int handle, blacs_int context );
+  Grid( blacs_grid_dim dim, mpi_info info, int64_t handle, int64_t context );
 
 public:
 
@@ -58,7 +58,7 @@ public:
    *  @param[in]  npr  Number of process rows
    *  @param[in]  npc  Number of process columns
    */
-  Grid( MPI_Comm c, blacs_int npr, blacs_int npc );
+  Grid( MPI_Comm c, int64_t npr, int64_t npc );
 
   /**
    *  \brief Copy constructor.
@@ -99,31 +99,31 @@ public:
    *  \brief Returns BLACS context.
    *  @returns BLACS context
    */
-  inline blacs_int context() const noexcept { return context_;         }
+  inline int64_t context() const noexcept { return context_;         }
 
   /**
    *  \brief Returns the number of rows in the BLACS grid.
    *  @returns Number of process rows
    */
-  inline blacs_int npr()     const noexcept { return grid_dim_.np_row; }
+  inline int64_t npr()     const noexcept { return grid_dim_.np_row; }
 
   /**
    *  \brief Returns the number of columns in the BLACS grid.
    *  @returns Number of process columns
    */
-  inline blacs_int npc()     const noexcept { return grid_dim_.np_col; }
+  inline int64_t npc()     const noexcept { return grid_dim_.np_col; }
 
   /**
    *  \brief Returns process row of this MPI rank
    *  @returns Process row corresponding to the current MPI rank
    */
-  inline blacs_int ipr()     const noexcept { return grid_dim_.my_row; }
+  inline int64_t ipr()     const noexcept { return grid_dim_.my_row; }
 
   /**
    *  \brief Returns process column of this MPI rank
    *  @returns Process column corresponding to the current MPI rank
    */
-  inline blacs_int ipc()     const noexcept { return grid_dim_.my_col; }
+  inline int64_t ipc()     const noexcept { return grid_dim_.my_col; }
 
   /**
    *  \brief Returns MPI communicator corresponding on which the BLACS grid has been constructed.

@@ -12,7 +12,7 @@ mpi_info::mpi_info( MPI_Comm c ) : comm_(c) {
 
 
   // Check if MPI has been initialized
-  int flag;
+  internal::mpi_int flag;
   MPI_Initialized(&flag);
   if( not flag ) {
     throw std::runtime_error("MPI Environment Not Initialized!");
@@ -25,15 +25,18 @@ mpi_info::mpi_info( MPI_Comm c ) : comm_(c) {
 
   } else {
 
-    MPI_Comm_rank( c, &rank_ );
-    MPI_Comm_size( c, &size_ );
+    internal::mpi_int _rank,_size;
+    MPI_Comm_rank( c, &_rank );
+    MPI_Comm_size( c, &_size );
+    rank_ = _rank;
+    size_ = _size;
 
   }
 }
 
 MPI_Comm  mpi_info::comm() const { return comm_; };
-mpi_int mpi_info::rank() const { return rank_; };
-mpi_int mpi_info::size() const { return size_; };
+int64_t mpi_info::rank() const { return rank_; };
+int64_t mpi_info::size() const { return size_; };
 
 
 }

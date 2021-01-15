@@ -14,25 +14,25 @@ namespace wrappers {
 // Element-wise sum
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gsum2d( const blacs_int ICONTXT, const char* SCOPE, const char* TOP, 
-          const blacs_int M, const blacs_int N, T* A, const blacs_int LDA,
-          const blacs_int RDEST, const blacs_int CDEST );
+  gsum2d( const int64_t ICONTXT, const char* SCOPE, const char* TOP, 
+          const int64_t M, const int64_t N, T* A, const int64_t LDA,
+          const int64_t RDEST, const int64_t CDEST );
 
 // Element-wise max
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gamx2d( const blacs_int ICONTXT, const char* SCOPE, const char* TOP, 
-          const blacs_int M, const blacs_int N, T* A, const blacs_int LDA,
-          blacs_int* RA, blacs_int* CA, const blacs_int RCFLAG, 
-          const blacs_int RDEST, const blacs_int CDEST );
+  gamx2d( const int64_t ICONTXT, const char* SCOPE, const char* TOP, 
+          const int64_t M, const int64_t N, T* A, const int64_t LDA,
+          int64_t* RA, int64_t* CA, const int64_t RCFLAG, 
+          const int64_t RDEST, const int64_t CDEST );
 
 // Element-wise min
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gamn2d( const blacs_int ICONTXT, const char* SCOPE, const char* TOP, 
-          const blacs_int M, const blacs_int N, T* A, const blacs_int LDA,
-          blacs_int* RA, blacs_int* CA, const blacs_int RCFLAG, 
-          const blacs_int RDEST, const blacs_int CDEST );
+  gamn2d( const int64_t ICONTXT, const char* SCOPE, const char* TOP, 
+          const int64_t M, const int64_t N, T* A, const int64_t LDA,
+          int64_t* RA, int64_t* CA, const int64_t RCFLAG, 
+          const int64_t RDEST, const int64_t CDEST );
 
 }
 }

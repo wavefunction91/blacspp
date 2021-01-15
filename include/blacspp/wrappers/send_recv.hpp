@@ -14,28 +14,28 @@ namespace wrappers {
 // Send
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gesd2d( const blacs_int ICONTXT, const blacs_int M, const blacs_int N,
-          const T* A, const blacs_int LDA, const blacs_int RDEST,
-          const blacs_int CDEST );
+  gesd2d( const int64_t ICONTXT, const int64_t M, const int64_t N,
+          const T* A, const int64_t LDA, const int64_t RDEST,
+          const int64_t CDEST );
 
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trsd2d( const blacs_int ICONTXT, const char* UPLO, const char* DIAG, 
-          const blacs_int M, const blacs_int N, const T* A, const blacs_int LDA, 
-          const blacs_int RDEST, const blacs_int CDEST );
+  trsd2d( const int64_t ICONTXT, const char* UPLO, const char* DIAG, 
+          const int64_t M, const int64_t N, const T* A, const int64_t LDA, 
+          const int64_t RDEST, const int64_t CDEST );
 
 // Recv
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gerv2d( const blacs_int ICONTXT, const blacs_int M, const blacs_int N,
-          T* A, const blacs_int LDA, const blacs_int RSRC,
-          const blacs_int CSRC );
+  gerv2d( const int64_t ICONTXT, const int64_t M, const int64_t N,
+          T* A, const int64_t LDA, const int64_t RSRC,
+          const int64_t CSRC );
 
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trrv2d( const blacs_int ICONTXT, const char* UPLO, const char* DIAG, 
-          const blacs_int M, const blacs_int N, T* A, const blacs_int LDA, 
-          const blacs_int RSRC, const blacs_int CSRC );
+  trrv2d( const int64_t ICONTXT, const char* UPLO, const char* DIAG, 
+          const int64_t M, const int64_t N, T* A, const int64_t LDA, 
+          const int64_t RSRC, const int64_t CSRC );
 
 }
 }

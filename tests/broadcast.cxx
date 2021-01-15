@@ -10,7 +10,7 @@
 #include <vector>
 
 #define BLACSPP_TEMPLATE_TEST_CASE(NAME, CAT)\
-TEMPLATE_TEST_CASE(NAME,CAT,blacspp::blacs_int, float, double, blacspp::scomplex, blacspp::dcomplex)
+TEMPLATE_TEST_CASE(NAME,CAT,blacspp::internal::blacs_int, float, double, blacspp::internal::scomplex, blacspp::internal::dcomplex)
 
 
 
@@ -27,7 +27,7 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Broadcast", "[broadcast]" ) {
 
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const blacspp::blacs_int M(4), N(4);
+  const int64_t M(4), N(4);
 
   std::vector< TestType > data_send( M*N, TestType(mpi.rank()) );
   std::vector< TestType > data_recv( M*N, TestType(-1) );
@@ -125,7 +125,7 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Broadcast", "[broadcast]" ) {
 
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const blacspp::blacs_int M(4), N(4);
+  const int64_t M(4), N(4);
 
   std::vector< TestType > data_send( M*N, TestType(mpi.rank()) );
   std::vector< TestType > data_recv( M*N, TestType(-1) );

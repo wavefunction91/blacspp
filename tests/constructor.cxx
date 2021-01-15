@@ -6,6 +6,7 @@
  */
 #include <catch2/catch.hpp>
 #include <blacspp/grid.hpp>
+#include <iostream>
 
 
 TEST_CASE( "Default Constructor", "[constructor]" ) {
@@ -25,8 +26,8 @@ TEST_CASE( "Square Grid", "[constructor]" ) {
   CHECK( mpi.size() == (grid.npr() * grid.npc()) );
 
   auto npr = grid.npr();
-  CHECK( grid.ipr() == (mpi.rank() / npr) );
-  CHECK( grid.ipc() == (mpi.rank() % npr) );
+  CHECK( grid.ipc() == (mpi.rank() / npr) );
+  CHECK( grid.ipr() == (mpi.rank() % npr) );
 
 }
 

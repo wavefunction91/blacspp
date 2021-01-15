@@ -14,26 +14,26 @@ namespace wrappers {
 // Send
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gebs2d( const blacs_int ICONTXT, const char* SCOPE, const char* TOP, 
-          const blacs_int M, const blacs_int N, const T* A, const blacs_int LDA );
+  gebs2d( const int64_t ICONTXT, const char* SCOPE, const char* TOP, 
+          const int64_t M, const int64_t N, const T* A, const int64_t LDA );
 
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trbs2d( const blacs_int ICONTXT, const char* SCOPE, const char* TOP,
-          const char* UPLO, const char* DIAG, const blacs_int M, const blacs_int N, 
-          const T* A, const blacs_int LDA ); 
+  trbs2d( const int64_t ICONTXT, const char* SCOPE, const char* TOP,
+          const char* UPLO, const char* DIAG, const int64_t M, const int64_t N, 
+          const T* A, const int64_t LDA ); 
 
 // Recv
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gebr2d( const blacs_int ICONTXT, const char* SCOPE, const char* TOP,
-          const blacs_int M, const blacs_int N, T* A, const blacs_int LDA );
+  gebr2d( const int64_t ICONTXT, const char* SCOPE, const char* TOP,
+          const int64_t M, const int64_t N, T* A, const int64_t LDA );
 
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trbr2d( const blacs_int ICONTXT, const char* SCOPE, const char* TOP,
-          const char* UPLO, const char* DIAG, const blacs_int M, const blacs_int N, 
-          T* A, const blacs_int LDA ); 
+  trbr2d( const int64_t ICONTXT, const char* SCOPE, const char* TOP,
+          const char* UPLO, const char* DIAG, const int64_t M, const int64_t N, 
+          T* A, const int64_t LDA ); 
 
 }
 }
