@@ -106,6 +106,7 @@ int64_t grid_init( int64_t ICONTXT, const char* ORDER, const int64_t NPROW,
 
 }
 
+
 int64_t grid_map( int64_t ICONTXT, const int64_t* USERMAP, 
                   const int64_t LDUMAP, const int64_t NPROW, 
                   const int64_t NPCOL ) {
@@ -125,9 +126,10 @@ int64_t grid_map( int64_t ICONTXT, const int64_t* USERMAP,
 
     Cblacs_gridmap( &_ICONTXT, _USERMAP.data(), _LDUMAP, _NPROW, _NPCOL );
     
-  } else {
+  } else if constexpr ( std::is_same_v<blacs_int,int64_t> ) {
 
-    Cblacs_gridmap( &_ICONTXT, USERMAP, LDUMAP, _NPROW, _NPCOL );
+    Cblacs_gridmap( &_ICONTXT, reinterpret_cast<const blacs_int*>(USERMAP), 
+                    LDUMAP, _NPROW, _NPCOL );
 
   }
 
@@ -162,8 +164,15 @@ void freebuff( const int64_t ICONTXT, const int64_t WAIT ) {
 // Infortmational
 blacs_grid_dim  grid_info( const int64_t ICONTXT ) {
 
+  blacs_int npr, npc, ipr, ipc;
+  Cblacs_gridinfo( ICONTXT, &npr, &npc, &ipr, &ipc );
+
   blacs_grid_dim info;
-  Cblacs_gridinfo( ICONTXT, &info.np_row, &info.np_col, &info.my_row, &info.my_col );
+  info.np_row = npr;
+  info.np_col = npc;
+  info.my_row = ipr;
+  info.my_col = ipc;
+
   return info;
 
 }
@@ -171,15 +180,24 @@ blacs_grid_dim  grid_info( const int64_t ICONTXT ) {
 int64_t pnum( const int64_t ICONTXT, const int64_t PROW, 
                 const int64_t PCOL ) {
 
-  return Cblacs_pnum( ICONTXT, PROW, PCOL );
+  auto _ICONTXT = detail::to_blacs_int( ICONTXT );
+  auto _PROW    = detail::to_blacs_int( PROW );
+  auto _PCOL    = detail::to_blacs_int( PCOL );
+
+  return Cblacs_pnum( _ICONTXT, _PROW, _PCOL );
 
 }
 
 std::pair< int64_t, int64_t > pcoord( const int64_t ICONTXT, 
-                                          const int64_t  PNUM ) {
+                                      const int64_t PNUM ) {
 
-  std::pair< int64_t, int64_t > coord;
-  Cblacs_pcoord( ICONTXT, PNUM, &coord.first, &coord.second );
+  auto _ICONTXT = detail::to_blacs_int( ICONTXT );
+  auto _PNUM    = detail::to_blacs_int( PNUM );
+
+  blacs_int ipr, ipc;
+  Cblacs_pcoord( ICONTXT, PNUM, &ipr, &ipc );
+
+  std::pair< int64_t, int64_t > coord = {ipr, ipc};
   return coord;
 
 }
@@ -187,7 +205,7 @@ std::pair< int64_t, int64_t > pcoord( const int64_t ICONTXT,
 
 // Misc
 void barrier( const int64_t ICONTXT, const char* SCOPE ) {
-  Cblacs_barrier( ICONTXT, SCOPE );
+  Cblacs_barrier( detail::to_blacs_int(ICONTXT), SCOPE );
 }
 
 int64_t blacs_from_sys( MPI_Comm c ) {
@@ -197,7 +215,7 @@ int64_t blacs_from_sys( MPI_Comm c ) {
 }
 
 void free_sys_handle( const int64_t handle ) {
-  Cfree_blacs_system_handle( handle );
+  Cfree_blacs_system_handle( detail::to_blacs_int(handle) );
 }
 
 
