@@ -5,7 +5,27 @@
 # All rights reserved
 #
 if( NOT TARGET ScaLAPACK::ScaLAPACK )
-  find_package( ScaLAPACK REQUIRED )
+
+  set( SCALAPACK_REQUIRED_COMPONENTS )
+  set( SCALAPACK_OPTIONAL_COMPONENTS )
+  if( BLACSPP_ENABLE_ILP64 )
+    if( BLACSPP_FORCE_ILP64 )
+      list( APPEND SCALAPACK_REQUIRED_COMPONENTS ilp64 )
+    else()
+      list( APPEND SCALAPACK_OPTIONAL_COMPONENTS ilp64 )
+    endif()
+  else()
+    list( APPEND SCALAPACK_REQUIRED_COMPONENTS lp64 )
+  endif()
+
+  find_package( ScaLAPACK REQUIRED 
+                COMPONENTS          ${SCALAPACK_REQUIRED_COMPONENTS}
+                OPTIONAL_COMPONENTS ${SCALAPACK_OPTIONAL_COMPONENTS} )
+
+  if( NOT ScaLAPACK_IS_LP64 )
+    set( SCALAPACK_IS_ILP64 TRUE )
+  endif()
+
 endif()
 
 set( BLACS_SRC broadcast.cxx
@@ -45,14 +65,19 @@ target_compile_features( blacspp PUBLIC cxx_std_17 )
 
 target_include_directories( blacspp PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-  #$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
 
 target_link_libraries( blacspp PUBLIC ScaLAPACK::ScaLAPACK )
 
 
-
+# Generate configure header
+configure_file(
+  ${PROJECT_SOURCE_DIR}/include/blacspp/config.hpp.in
+  ${PROJECT_BINARY_DIR}/include/blacspp/config.hpp
+)
+list( APPEND BLACS_HEADERS ${PROJECT_BINARY_DIR}/include/blacspp/config.hpp )
 
 
 # INSTALL rules

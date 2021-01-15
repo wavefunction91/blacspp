@@ -32,8 +32,8 @@ mpi_info::mpi_info( MPI_Comm c ) : comm_(c) {
 }
 
 MPI_Comm  mpi_info::comm() const { return comm_; };
-blacs_int mpi_info::rank() const { return rank_; };
-blacs_int mpi_info::size() const { return size_; };
+mpi_int mpi_info::rank() const { return rank_; };
+mpi_int mpi_info::size() const { return size_; };
 
 
 }

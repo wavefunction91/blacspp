@@ -10,10 +10,16 @@
 #include <mpi.h>
 #include <utility>
 
+#include <blacspp/config.hpp>
+
 namespace blacspp {
 
   /// Integer type for BLACS operations
+  #ifdef SCALAPACK_IS_ILP64
+  using blacs_int = int64_t;
+  #else
   using blacs_int = int32_t;
+  #endif
 
   /// Type for single precision complex floating point numbers
   using scomplex  = std::complex< float >;
@@ -35,14 +41,16 @@ namespace blacspp {
   };
 
 
+  using mpi_int = int32_t; // TODO: handle 64-bit MPI
+
   /**
    *  \brief A struct to manage basic MPI information
    */
   class mpi_info {
 
     MPI_Comm  comm_; ///< MPI Communicator which defines MPI context
-    blacs_int rank_; ///< Rank of current process in specified MPI context
-    blacs_int size_; ///< Size of specified MPI context
+    mpi_int rank_; ///< Rank of current process in specified MPI context
+    mpi_int size_; ///< Size of specified MPI context
 
   public:
 
@@ -66,13 +74,13 @@ namespace blacspp {
      *  \brief Get rank of current process in the internal MPI context
      *  \returns the rank of current MPI process
      */
-    blacs_int rank() const;
+    mpi_int rank() const;
 
     /**
      *  \brief Get size ofthe internal MPI context
      *  \returns the size of the MPI context
      */
-    blacs_int size() const;
+    mpi_int size() const;
 
   };
 
