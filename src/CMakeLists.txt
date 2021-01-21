@@ -26,6 +26,9 @@ if( NOT TARGET ScaLAPACK::ScaLAPACK )
     set( SCALAPACK_IS_ILP64 TRUE )
   endif()
 
+  set( ScaLAPACK_LIBRARIES "${ScaLAPACK_LIBRARIES}" CACHE STRING "ScaLAPACK Libraries" )
+  set( ScaLAPACK_IS_LP64   ${ScaLAPACK_IS_LP64}     CACHE BOOL   "ScaLAPACK LP64"      )
+
 endif()
 
 set( BLACS_SRC broadcast.cxx
