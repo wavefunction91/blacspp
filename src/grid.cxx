@@ -37,7 +37,7 @@ Grid::Grid( MPI_Comm c, int64_t npr, int64_t npc ) : mpi_info_( c ) {
     system_handle_ = wrappers::blacs_from_sys( c );
     
     // Greate blacs grid
-    context_ = wrappers::grid_init( system_handle_, "row-major", npr, npc );
+    context_ = wrappers::grid_init( system_handle_, "Row-major", npr, npc );
 
     // Grab the grid info
     grid_dim_ = wrappers::grid_info( context_ );

@@ -9,7 +9,8 @@
 #include <sstream>
 #include <limits>
 
-namespace blacspp::detail {
+namespace blacspp {
+namespace detail  {
 
   std::string type_string( const Triangle tri ) {
     if( tri == Upper ) return std::string( "Upper" );
@@ -47,4 +48,6 @@ namespace blacspp::detail {
     return i;
 
   }
+
+}
 }

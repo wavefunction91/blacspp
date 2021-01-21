@@ -61,7 +61,7 @@ list( TRANSFORM BLACS_WRAPPER_HEADERS PREPEND ${PROJECT_SOURCE_DIR}/include/blac
 
 
 add_library( blacspp ${BLACS_SRC} )
-target_compile_features( blacspp PUBLIC cxx_std_17 )
+target_compile_features( blacspp PUBLIC cxx_std_11 )
 
 target_include_directories( blacspp PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
