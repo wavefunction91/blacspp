@@ -58,7 +58,7 @@ public:
    *  @param[in]  npr  Number of process rows
    *  @param[in]  npc  Number of process columns
    */
-  Grid( MPI_Comm c, int64_t npr, int64_t npc );
+  Grid( MPI_Comm c, int64_t npr, int64_t npc, GridOrder order = GridOrder::RowMajor );
 
   /**
    *  \brief Copy constructor.
@@ -152,7 +152,7 @@ public:
    *  @param[in] comm MPI Communicator from which the BLACS grid will be constructed.
    *  @returns        Square BLACS grid.
    */
-  static Grid square_grid( const MPI_Comm& comm );
+  static Grid square_grid( const MPI_Comm& comm, GridOrder order = GridOrder::RowMajor );
 };
 
 }

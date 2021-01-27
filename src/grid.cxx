@@ -26,7 +26,7 @@ void Grid::barrier( Scope scope ) const noexcept {
 
 Grid::Grid() : Grid( MPI_COMM_NULL, 0, 0 ){ }
 
-Grid::Grid( MPI_Comm c, int64_t npr, int64_t npc ) : mpi_info_( c ) {
+Grid::Grid( MPI_Comm c, int64_t npr, int64_t npc, GridOrder order ) : mpi_info_( c ) {
 
   if( is_valid() ) {
 
@@ -37,7 +37,8 @@ Grid::Grid( MPI_Comm c, int64_t npr, int64_t npc ) : mpi_info_( c ) {
     system_handle_ = wrappers::blacs_from_sys( c );
     
     // Greate blacs grid
-    context_ = wrappers::grid_init( system_handle_, "Row-major", npr, npc );
+    const char order_char = char(order);
+    context_ = wrappers::grid_init( system_handle_, &order_char, npr, npc );
 
     // Grab the grid info
     grid_dim_ = wrappers::grid_info( context_ );
@@ -71,7 +72,7 @@ Grid::~Grid() noexcept {
 
 
 
-Grid Grid::square_grid( const MPI_Comm& comm ) {
+Grid Grid::square_grid( const MPI_Comm& comm, GridOrder order ) {
 
   mpi_info info(comm);
  
@@ -83,7 +84,7 @@ Grid Grid::square_grid( const MPI_Comm& comm ) {
     npc = info.size() / npr;
   }
 
-  return Grid( comm, npr, npc );
+  return Grid( comm, npr, npc, order );
 
 }
 
