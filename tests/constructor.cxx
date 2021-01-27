@@ -25,9 +25,27 @@ TEST_CASE( "Square Grid", "[constructor]" ) {
   REQUIRE( grid.is_valid() );  
   CHECK( mpi.size() == (grid.npr() * grid.npc()) );
 
+}
+
+TEST_CASE( "Row Major Grid", "[constructor]" ) {
+
+  blacspp::Grid grid = blacspp::Grid::square_grid(MPI_COMM_WORLD, blacspp::GridOrder::RowMajor);
+  blacspp::mpi_info mpi(MPI_COMM_WORLD);
+
   auto npr = grid.npr();
   CHECK( grid.ipr() == (mpi.rank() / npr) );
   CHECK( grid.ipc() == (mpi.rank() % npr) );
+
+}
+
+TEST_CASE( "Col Major Grid", "[constructor]" ) {
+
+  blacspp::Grid grid = blacspp::Grid::square_grid(MPI_COMM_WORLD, blacspp::GridOrder::ColMajor);
+  blacspp::mpi_info mpi(MPI_COMM_WORLD);
+
+  auto npr = grid.npr();
+  CHECK( grid.ipr() == (mpi.rank() % npr) );
+  CHECK( grid.ipc() == (mpi.rank() / npr) );
 
 }
 
