@@ -63,7 +63,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gebs2d( const Grid& grid, const Scope scope, const Topology top,
           const int64_t M, const int64_t N, const Container& A, 
           const int64_t LDA ) {
@@ -91,7 +91,7 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gebs2d( const Grid& grid, const Scope scope, const Topology top,
           const Container& A ) {
 
@@ -156,7 +156,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   trbs2d( const Grid& grid, const Scope scope, const Topology top,
           const Triangle uplo, const Diagonal diag,
           const int64_t M, const int64_t N, const Container& A, 
@@ -227,7 +227,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gebr2d( const Grid& grid, const Scope scope, const Topology top,
           const int64_t M, const int64_t N, Container& A, const int64_t LDA ) {
 
@@ -253,7 +253,7 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gebr2d( const Grid& grid, const Scope scope, const Topology top, Container& A ) { 
 
   gebr2d( grid, scope, top, A.size(), 1, A, A.size() );
@@ -316,7 +316,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   trbr2d( const Grid& grid, const Scope scope, const Topology top,
           const Triangle uplo, const Diagonal diag,
           const int64_t M, const int64_t N, Container& A, const int64_t LDA ) {

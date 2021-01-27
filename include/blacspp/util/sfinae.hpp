@@ -11,6 +11,22 @@
 namespace blacspp {
 namespace detail {
 
+#if __cplusplus < 201402L
+  template <bool B, class T = void>
+  using enable_if_t = typename std::enable_if<B,T>::type;
+#else
+  template <bool B, class T = void>
+  using enable_if_t = std::enable_if_t<B,T>;
+#endif
+
+#if __cplusplus < 201703L
+  template <class...>
+  using void_t = void;
+#else
+  template <class... Args>
+  using std::void_t<Args...>;
+#endif
+
   /**
    *  \brief A SFINAE struct to check if a type is BLACS enabled.
    *  
@@ -44,27 +60,31 @@ namespace detail {
     typename std::enable_if< blacs_supported<T>::value, U >::type;
 
 
-  template <typename T, typename = std::void_t<>>
+  template <typename T, typename = void_t<>>
   struct has_data_member : public std::false_type { };
 
   template <typename T>
   struct has_data_member< T,
-    std::void_t< decltype( std::declval<T>().data() ) >
+    void_t< decltype( std::declval<T>().data() ) >
   > : public std::true_type { };
 
+#if __cplusplus >= 201703L
   template <typename T>
   inline constexpr bool has_data_member_v = has_data_member<T>::value;
+#endif
 
-  template <typename T, typename = std::void_t<>>
+  template <typename T, typename = void_t<>>
   struct has_size_member : public std::false_type { };
 
   template <typename T>
   struct has_size_member< T,
-    std::void_t< decltype( std::declval<T>().size() ) >
+    void_t< decltype( std::declval<T>().size() ) >
   > : public std::true_type { };
 
+#if __cplusplus >= 201703L
   template <typename T>
   inline constexpr bool has_size_member_v = has_size_member<T>::value;
+#endif
 
 
 

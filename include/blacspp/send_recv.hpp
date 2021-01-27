@@ -63,7 +63,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gesd2d( const Grid& grid, 
           const int64_t M, const int64_t N, const Container& A, 
           const int64_t LDA, const int64_t RDEST, const int64_t CDEST ) {
@@ -93,7 +93,7 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gesd2d( const Grid& grid, const Container& A, 
           const int64_t RDEST, const int64_t CDEST ) {
 
@@ -160,7 +160,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   trsd2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
           const int64_t M, const int64_t N, const Container& A, 
           const int64_t LDA, const int64_t RDEST, const int64_t CDEST ) {
@@ -233,7 +233,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gerv2d( const Grid& grid, const int64_t M, const int64_t N,
           Container& A, const int64_t LDA, const int64_t RSRC,
           const int64_t CSRC ) {
@@ -262,7 +262,7 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gerv2d( const Grid& grid, Container& A, 
           const int64_t RSRC, const int64_t CSRC ) {
 
@@ -328,7 +328,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   trrv2d( const Grid& grid,  const Triangle uplo, const Diagonal diag,
           const int64_t M, const int64_t N, Container& A, 
           const int64_t LDA, const int64_t RSRC, const int64_t CSRC ) {
