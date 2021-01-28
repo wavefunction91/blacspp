@@ -24,6 +24,7 @@ TEST_CASE( "Square Grid", "[constructor]" ) {
 
   REQUIRE( grid.is_valid() );  
   CHECK( mpi.size() == (grid.npr() * grid.npc()) );
+  CHECK( grid.context() >= 0 );
 
 }
 
@@ -46,6 +47,40 @@ TEST_CASE( "Col Major Grid", "[constructor]" ) {
   auto npr = grid.npr();
   CHECK( grid.ipr() == (mpi.rank() % npr) );
   CHECK( grid.ipc() == (mpi.rank() / npr) );
+
+}
+
+TEST_CASE( "Process Map", "[constructor]" ) {
+
+  blacspp::mpi_info mpi(MPI_COMM_WORLD);
+
+  if( mpi.size() > 1 ) {
+
+    int64_t np_use = mpi.size() - 1;
+
+    std::vector<int64_t> pmap(np_use);
+    std::iota( pmap.begin(), pmap.end(), 0 );
+
+    blacspp::Grid grid( MPI_COMM_WORLD, np_use, 1, pmap.data(), np_use );
+
+    bool rank_participate = mpi.rank() < np_use;
+
+
+    if( rank_participate ) {
+      CHECK( grid.npr() == np_use     );
+      CHECK( grid.npc() == 1          );
+      CHECK( grid.ipr() == mpi.rank() );
+      CHECK( grid.ipc() == 0          );
+      CHECK( grid.context() >= 0 );
+    } else {
+      CHECK( grid.npr() == -1 );
+      CHECK( grid.npc() == -1 );
+      CHECK( grid.ipr() == -1 );
+      CHECK( grid.ipc() == -1 );
+      CHECK( grid.context() < 0 );
+    }
+    
+  }
 
 }
 

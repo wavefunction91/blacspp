@@ -47,6 +47,28 @@ Grid::Grid( MPI_Comm c, int64_t npr, int64_t npc, GridOrder order ) : mpi_info_(
 
 }
 
+Grid::Grid( MPI_Comm c, int64_t npr, int64_t npc, int64_t* map, int64_t ldmap ) :
+  mpi_info_(c) {
+
+  if( is_valid() ) {
+
+    // Create system handle
+    system_handle_ = wrappers::blacs_from_sys( c );
+
+    // TODO check that the map is sane
+    // TODO check that ldmap >= npr
+
+    // Create a BLACS grid given the process map
+    context_ = wrappers::grid_map( system_handle_, map, ldmap, npr, npc );
+
+    // Grab the grid info
+    grid_dim_ = wrappers::grid_info( context_ );
+
+  }
+
+}
+
+
 Grid::Grid( blacs_grid_dim dim, mpi_info mpi, int64_t handle, int64_t context ) :
   grid_dim_(dim), mpi_info_(mpi), system_handle_(handle), context_(context){ }
 
@@ -64,7 +86,7 @@ Grid::Grid( Grid&& other ) noexcept :
 Grid::~Grid() noexcept {
 
   if( is_valid() ) {
-    wrappers::grid_exit( context_ );
+    if( context_ >= 0 ) wrappers::grid_exit( context_ );
     wrappers::free_sys_handle( system_handle_ );
   }
 

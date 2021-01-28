@@ -60,6 +60,15 @@ public:
    */
   Grid( MPI_Comm c, int64_t npr, int64_t npc, GridOrder order = GridOrder::RowMajor );
 
+
+  /**
+   *  \brief Construct a BLACS grid from a predefined process map
+   *
+   *  Constructs a BLACS grid from a predefined process map over an MPI 
+   *  communicator.
+   */
+  Grid( MPI_Comm c, int64_t npr, int64_t npc, int64_t* map, int64_t ldmap );
+
   /**
    *  \brief Copy constructor.
    *
