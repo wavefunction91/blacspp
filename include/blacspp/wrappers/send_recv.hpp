@@ -6,7 +6,7 @@
  */
 #pragma once
 #include <blacspp/types.hpp>
-#include <blacspp/util/sfinae.hpp>
+#include <blacspp/util/type_traits.hpp>
 
 namespace blacspp {
 namespace wrappers {
