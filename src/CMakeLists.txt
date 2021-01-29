@@ -47,7 +47,7 @@ set( BLACS_HEADERS broadcast.hpp
                    types.hpp
 )
 set( BLACS_UTIL_HEADERS
-                   util/sfinae.hpp
+                   util/type_traits.hpp
                    util/type_conversions.hpp
 )
 set( BLACS_WRAPPER_HEADERS
