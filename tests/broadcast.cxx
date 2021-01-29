@@ -131,19 +131,19 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Broadcast", "[broadcast]" ) {
   std::vector< TestType > data_recv( M*N, TestType(-1) );
 
   auto check_triangle = 
-    [&]( blacspp::Triangle tri, blacspp::Diagonal diag, const auto& data, const TestType val ) {
+    [&]( blacspp::Uplo tri, blacspp::Diag diag, const auto& data, const TestType val ) {
       for( auto i = 0; i < M; ++i )
       for( auto j = 0; j < N; ++j ) {
         auto x = data[ i + j * M ];
-        if( diag == blacspp::Diagonal::Unit and i == j )      CHECK( x == TestType(-1) );
-        else if( tri == blacspp::Triangle::Upper and j >= i ) CHECK( x == val );
-        else if( tri == blacspp::Triangle::Lower and i >= j ) CHECK( x == val );
+        if( diag == blacspp::Diag::Unit and i == j )      CHECK( x == TestType(-1) );
+        else if( tri == blacspp::Uplo::Upper and j >= i ) CHECK( x == val );
+        else if( tri == blacspp::Uplo::Lower and i >= j ) CHECK( x == val );
         else                                                  CHECK( x == TestType(-1) ); 
       }
     }; 
 
-  std::array< blacspp::Triangle, 2 > tris  = { blacspp::Triangle::Upper, blacspp::Triangle::Lower   };
-  std::array< blacspp::Diagonal, 2 > diags = { blacspp::Diagonal::Unit,  blacspp::Diagonal::NonUnit };
+  std::array< blacspp::Uplo, 2 > tris  = { blacspp::Uplo::Upper, blacspp::Uplo::Lower   };
+  std::array< blacspp::Diag, 2 > diags = { blacspp::Diag::Unit,  blacspp::Diag::NonUnit };
 
   SECTION( "Pointer Interface" ) {
 

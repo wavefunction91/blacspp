@@ -91,24 +91,24 @@ namespace internal {
 
 
 
-  enum class Triangle {
-    Upper,
-    Lower
+  enum class Uplo : char {
+    Upper = 'U',
+    Lower = 'L'
   };
 
-  enum class Diagonal {
-    Unit,
-    NonUnit
+  enum class Diag : char {
+    Unit    = 'U',
+    NonUnit = 'N'
   };
 
-  enum class Scope {
-    All,
-    Row,
-    Column
+  enum class Scope : char {
+    All     = 'A',
+    Row     = 'R',
+    Column  = 'C'
   };
 
-  enum class Topology {
-    IRing
+  enum class Topology : char {
+    IRing = 'I'
   };
 
   enum class GridOrder : char {

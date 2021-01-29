@@ -12,6 +12,7 @@
 namespace blacspp {
 namespace detail  {
 
+#if 0
   std::string type_string( const Triangle tri ) {
     if( tri == Triangle::Upper ) return std::string( "Upper" );
     else                         return std::string( "Lower" );
@@ -32,6 +33,7 @@ namespace detail  {
   std::string type_string( const Topology top ) {
     return std::string( "i-ring" );
   }
+#endif
 
 
   internal::blacs_int to_blacs_int( int64_t i ) {

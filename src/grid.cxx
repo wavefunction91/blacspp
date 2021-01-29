@@ -18,8 +18,8 @@ bool Grid::is_valid() const {
 
 
 void Grid::barrier( Scope scope ) const noexcept {
-  auto SCOPE = detail::type_string( scope );
-  wrappers::barrier( context(), SCOPE.c_str() );
+  auto SCOPE = char( scope );
+  wrappers::barrier( context(), &SCOPE );
 }
 
 
