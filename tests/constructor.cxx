@@ -13,6 +13,8 @@ TEST_CASE( "Default Constructor", "[constructor]" ) {
 
   blacspp::Grid grid;
   CHECK( not grid.is_valid() );
+  CHECK( grid.context() == -1 );
+  CHECK( grid.comm()    == MPI_COMM_NULL );
 
 }
 
@@ -89,6 +91,24 @@ TEST_CASE( "Copy Constructor", "[constructor]" ) {
 
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::Grid grid2( grid );
+
+  REQUIRE( grid.is_valid()  );
+  REQUIRE( grid2.is_valid() );
+
+  CHECK( grid.npr()  == grid2.npr()  );
+  CHECK( grid.npc()  == grid2.npc()  );
+  CHECK( grid.ipr()  == grid2.ipr()  );
+  CHECK( grid.ipc()  == grid2.ipc()  );
+  CHECK( grid.comm() == grid2.comm() );
+
+  CHECK( grid.context() == grid2.context() );
+
+}
+
+TEST_CASE( "Clone", "[constructor]" ) {
+
+  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
+  blacspp::Grid grid2 = grid.clone();
 
   REQUIRE( grid.is_valid()  );
   REQUIRE( grid2.is_valid() );
