@@ -6,6 +6,15 @@ list( APPEND CMAKE_MODULE_PATH ${blacspp_CMAKE_DIR}/linalg-cmake-modules )
 if( NOT TARGET ScaLAPACK::ScaLAPACK )
   include( CMakeFindDependencyMacro )
   set(ScaLAPACK_LIBRARIES "@ScaLAPACK_LIBRARIES@") # Already discovered CMake
+
+  # Propagate ILP64
+  set(SCALAPACK_IS_ILP64  @SCALAPACK_IS_ILP64@   )
+  if( SCALAPACK_IS_ILP64 )
+    set( ScaLAPACK_IS_LP64 FALSE )
+  else()
+    set( ScaLAPACK_IS_LP64 TRUE )
+  endif()
+
   enable_language( C )
   if( MPI::MPI_C IN_LIST ScaLAPACK_LIBRARIES )
     find_dependency( MPI )
@@ -14,6 +23,7 @@ if( NOT TARGET ScaLAPACK::ScaLAPACK )
     find_dependency( OpenMP )
   endif()
   find_dependency( ScaLAPACK MODULE )
+
 endif()
 
 

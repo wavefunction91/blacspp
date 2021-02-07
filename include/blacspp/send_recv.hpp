@@ -33,8 +33,8 @@ namespace blacspp {
 template <typename T>
 detail::enable_if_blacs_supported_t<T>
   gesd2d( const Grid& grid, 
-          const blacs_int M, const blacs_int N, const T* A, const blacs_int LDA,
-          const blacs_int RDEST, const blacs_int CDEST ) {
+          const int64_t M, const int64_t N, const T* A, const int64_t LDA,
+          const int64_t RDEST, const int64_t CDEST ) {
 
   wrappers::gesd2d( grid.context(), M, N, A, LDA, RDEST, CDEST );
 
@@ -63,10 +63,10 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gesd2d( const Grid& grid, 
-          const blacs_int M, const blacs_int N, const Container& A, 
-          const blacs_int LDA, const blacs_int RDEST, const blacs_int CDEST ) {
+          const int64_t M, const int64_t N, const Container& A, 
+          const int64_t LDA, const int64_t RDEST, const int64_t CDEST ) {
 
   gesd2d( grid, M, N, A.data(), LDA, RDEST, CDEST );
 
@@ -93,9 +93,9 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gesd2d( const Grid& grid, const Container& A, 
-          const blacs_int RDEST, const blacs_int CDEST ) {
+          const int64_t RDEST, const int64_t CDEST ) {
 
   gesd2d( grid, A.size(), 1, A, A.size(), RDEST, CDEST );
 
@@ -125,14 +125,14 @@ std::enable_if_t< detail::has_size_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trsd2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
-          const blacs_int M, const blacs_int N, const T* A, const blacs_int LDA, 
-          const blacs_int RDEST, const blacs_int CDEST ) {
+  trsd2d( const Grid& grid, const Uplo uplo, const Diag diag, 
+          const int64_t M, const int64_t N, const T* A, const int64_t LDA, 
+          const int64_t RDEST, const int64_t CDEST ) {
 
-  auto UPLO = detail::type_string( uplo );
-  auto DIAG = detail::type_string( diag );
+  auto UPLO = char( uplo );
+  auto DIAG = char( diag );
 
-  wrappers::trsd2d( grid.context(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA, RDEST, CDEST );
+  wrappers::trsd2d( grid.context(), &UPLO, &DIAG, M, N, A, LDA, RDEST, CDEST );
 
 }
 
@@ -160,10 +160,10 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
-  trsd2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
-          const blacs_int M, const blacs_int N, const Container& A, 
-          const blacs_int LDA, const blacs_int RDEST, const blacs_int CDEST ) {
+detail::enable_if_t< detail::has_data_member<Container>::value >
+  trsd2d( const Grid& grid, const Uplo uplo, const Diag diag, 
+          const int64_t M, const int64_t N, const Container& A, 
+          const int64_t LDA, const int64_t RDEST, const int64_t CDEST ) {
 
   trsd2d( grid, uplo, diag, M, N, A.data(), LDA, RDEST, CDEST );
 
@@ -203,9 +203,9 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  gerv2d( const Grid& grid, const blacs_int M, const blacs_int N,
-          T* A, const blacs_int LDA, const blacs_int RSRC,
-          const blacs_int CSRC ) {
+  gerv2d( const Grid& grid, const int64_t M, const int64_t N,
+          T* A, const int64_t LDA, const int64_t RSRC,
+          const int64_t CSRC ) {
 
   wrappers::gerv2d( grid.context(), M, N, A, LDA, RSRC, CSRC );
 
@@ -233,10 +233,10 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
-  gerv2d( const Grid& grid, const blacs_int M, const blacs_int N,
-          Container& A, const blacs_int LDA, const blacs_int RSRC,
-          const blacs_int CSRC ) {
+detail::enable_if_t< detail::has_data_member<Container>::value >
+  gerv2d( const Grid& grid, const int64_t M, const int64_t N,
+          Container& A, const int64_t LDA, const int64_t RSRC,
+          const int64_t CSRC ) {
 
   gerv2d( grid, M, N, A.data(), LDA, RSRC, CSRC );
 
@@ -262,9 +262,9 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gerv2d( const Grid& grid, Container& A, 
-          const blacs_int RSRC, const blacs_int CSRC ) {
+          const int64_t RSRC, const int64_t CSRC ) {
 
   gerv2d( grid, A.size(), 1, A, A.size(), RSRC, CSRC );
 
@@ -293,14 +293,14 @@ std::enable_if_t< detail::has_size_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trrv2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
-          const blacs_int M, const blacs_int N, T* A, const blacs_int LDA, 
-          const blacs_int RSRC, const blacs_int CSRC ) {
+  trrv2d( const Grid& grid, const Uplo uplo, const Diag diag, 
+          const int64_t M, const int64_t N, T* A, const int64_t LDA, 
+          const int64_t RSRC, const int64_t CSRC ) {
 
-  auto UPLO = detail::type_string( uplo );
-  auto DIAG = detail::type_string( diag );
+  auto UPLO = char( uplo );
+  auto DIAG = char( diag );
 
-  wrappers::trrv2d( grid.context(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA, RSRC, CSRC );
+  wrappers::trrv2d( grid.context(), &UPLO, &DIAG, M, N, A, LDA, RSRC, CSRC );
 
 }
 
@@ -328,10 +328,10 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
-  trrv2d( const Grid& grid,  const Triangle uplo, const Diagonal diag,
-          const blacs_int M, const blacs_int N, Container& A, 
-          const blacs_int LDA, const blacs_int RSRC, const blacs_int CSRC ) {
+detail::enable_if_t< detail::has_data_member<Container>::value >
+  trrv2d( const Grid& grid,  const Uplo uplo, const Diag diag,
+          const int64_t M, const int64_t N, Container& A, 
+          const int64_t LDA, const int64_t RSRC, const int64_t CSRC ) {
 
   trrv2d( grid, uplo, diag, M, N, A.data(), LDA, RSRC, CSRC );
 

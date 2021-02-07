@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <blacspp/wrappers/send_recv.hpp>
+#include <blacspp/util/type_conversions.hpp>
 
-using blacspp::blacs_int;
-using blacspp::scomplex;
-using blacspp::dcomplex;
+using blacspp::internal::blacs_int;
+using blacspp::internal::scomplex;
+using blacspp::internal::dcomplex;
 
 // Prototypes
 extern "C" {
@@ -94,14 +95,20 @@ namespace wrappers {
 
 // GESD2D
 #define gesd2d_impl( fname, type )\
-template <>                                                      \
-void gesd2d<type>(                                               \
-  const blacs_int ICONTXT, const blacs_int M, const blacs_int N, \
-  const type* A, const blacs_int LDA, const blacs_int RDEST,     \
-  const blacs_int CDEST ) {                                      \
-                                                                 \
-  fname( ICONTXT, M, N, A, LDA, RDEST, CDEST );                  \
-                                                                 \
+template <>                                                \
+void gesd2d<type>(                                         \
+  const int64_t ICONTXT, const int64_t M, const int64_t N, \
+  const type* A, const int64_t LDA, const int64_t RDEST,   \
+  const int64_t CDEST ) {                                  \
+                                                           \
+  auto _M   = detail::to_blacs_int( M   );                 \
+  auto _N   = detail::to_blacs_int( N   );                 \
+  auto _LDA = detail::to_blacs_int( LDA );                 \
+  auto _RDEST = detail::to_blacs_int( RDEST );             \
+  auto _CDEST = detail::to_blacs_int( CDEST );             \
+                                                           \
+  fname( ICONTXT, _M, _N, A, _LDA, _RDEST, _CDEST );       \
+                                                           \
 }
 
 gesd2d_impl( Cigesd2d, blacs_int );
@@ -113,14 +120,20 @@ gesd2d_impl( Czgesd2d, dcomplex  );
 
 // TRSD2D
 #define trsd2d_impl( fname, type )\
-template <>                                                                 \
-void trsd2d<type>(                                                          \
-  const blacs_int ICONTXT, const char* UPLO, const char* DIAG,              \
-  const blacs_int M, const blacs_int N, const type* A, const blacs_int LDA, \
-  const blacs_int RDEST, const blacs_int CDEST ) {                          \
-                                                                            \
-  fname( ICONTXT, UPLO, DIAG, M, N, A, LDA, RDEST, CDEST );                 \
-                                                                            \
+template <>                                                           \
+void trsd2d<type>(                                                    \
+  const int64_t ICONTXT, const char* UPLO, const char* DIAG,          \
+  const int64_t M, const int64_t N, const type* A, const int64_t LDA, \
+  const int64_t RDEST, const int64_t CDEST ) {                        \
+                                                                      \
+  auto _M   = detail::to_blacs_int( M   );                            \
+  auto _N   = detail::to_blacs_int( N   );                            \
+  auto _LDA = detail::to_blacs_int( LDA );                            \
+  auto _RDEST = detail::to_blacs_int( RDEST );                        \
+  auto _CDEST = detail::to_blacs_int( CDEST );                        \
+                                                                      \
+  fname( ICONTXT, UPLO, DIAG, _M, _N, A, _LDA, _RDEST, _CDEST );      \
+                                                                      \
 }
 
 trsd2d_impl( Citrsd2d, blacs_int );
@@ -139,14 +152,20 @@ trsd2d_impl( Cztrsd2d, dcomplex  );
 
 // GERV2D
 #define gerv2d_impl( fname, type )\
-template <>                                                      \
-void gerv2d<type>(                                               \
-  const blacs_int ICONTXT, const blacs_int M, const blacs_int N, \
-  type* A, const blacs_int LDA, const blacs_int RSRC,            \
-  const blacs_int CSRC ) {                                       \
-                                                                 \
-  fname( ICONTXT, M, N, A, LDA, RSRC, CSRC );                    \
-                                                                 \
+template <>                                                \
+void gerv2d<type>(                                         \
+  const int64_t ICONTXT, const int64_t M, const int64_t N, \
+  type* A, const int64_t LDA, const int64_t RSRC,          \
+  const int64_t CSRC ) {                                   \
+                                                           \
+  auto _M   = detail::to_blacs_int( M   );                 \
+  auto _N   = detail::to_blacs_int( N   );                 \
+  auto _LDA = detail::to_blacs_int( LDA );                 \
+  auto _RSRC = detail::to_blacs_int( RSRC );               \
+  auto _CSRC = detail::to_blacs_int( CSRC );               \
+                                                           \
+  fname( ICONTXT, _M, _N, A, _LDA, _RSRC, _CSRC );         \
+                                                           \
 }
 
 gerv2d_impl( Cigerv2d, blacs_int );
@@ -158,14 +177,20 @@ gerv2d_impl( Czgerv2d, dcomplex  );
 
 // TRRV2D
 #define trrv2d_impl( fname, type )\
-template <>                                                           \
-void trrv2d<type>(                                                    \
-  const blacs_int ICONTXT, const char* UPLO, const char* DIAG,        \
-  const blacs_int M, const blacs_int N, type* A, const blacs_int LDA, \
-  const blacs_int RSRC, const blacs_int CSRC ) {                      \
-                                                                      \
-  fname( ICONTXT, UPLO, DIAG, M, N, A, LDA, RSRC, CSRC );             \
-                                                                      \
+template <>                                                     \
+void trrv2d<type>(                                              \
+  const int64_t ICONTXT, const char* UPLO, const char* DIAG,    \
+  const int64_t M, const int64_t N, type* A, const int64_t LDA, \
+  const int64_t RSRC, const int64_t CSRC ) {                    \
+                                                                \
+  auto _M   = detail::to_blacs_int( M   );                      \
+  auto _N   = detail::to_blacs_int( N   );                      \
+  auto _LDA = detail::to_blacs_int( LDA );                      \
+  auto _RSRC = detail::to_blacs_int( RSRC );                    \
+  auto _CSRC = detail::to_blacs_int( CSRC );                    \
+                                                                \
+  fname( ICONTXT, UPLO, DIAG, _M, _N, A, _LDA, _RSRC, _CSRC );  \
+                                                                \
 }
 
 trrv2d_impl( Citrrv2d, blacs_int );

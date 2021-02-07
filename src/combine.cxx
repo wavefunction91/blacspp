@@ -5,10 +5,14 @@
  *  All rights reserved
  */
 #include <blacspp/wrappers/combine.hpp>
+#include <blacspp/util/type_conversions.hpp>
 
-using blacspp::blacs_int;
-using blacspp::scomplex;
-using blacspp::dcomplex;
+#include <vector>
+#include <algorithm>
+
+using blacspp::internal::blacs_int;
+using blacspp::internal::scomplex;
+using blacspp::internal::dcomplex;
 
 // Prototypes
 extern "C" {
@@ -94,14 +98,20 @@ namespace wrappers {
 
 // Element-wise sum
 #define gsum2d_impl( fname, type )\
-template <>                                                           \
-void gsum2d<type>(                                                    \
-  const blacs_int ICONTXT, const char* SCOPE, const char* TOP,          \
-  const blacs_int M, const blacs_int N, type* A, const blacs_int LDA, \
-  const blacs_int RDEST, const blacs_int CDEST ) {                    \
-                                                                      \
-  fname( ICONTXT, SCOPE, TOP, M, N, A, LDA, RDEST, CDEST );           \
-                                                                      \
+template <>                                                      \
+void gsum2d<type>(                                               \
+  const int64_t ICONTXT, const char* SCOPE, const char* TOP,     \
+  const int64_t M, const int64_t N, type* A, const int64_t LDA,  \
+  const int64_t RDEST, const int64_t CDEST ) {                   \
+                                                                 \
+  auto _M   = detail::to_blacs_int( M   );                       \
+  auto _N   = detail::to_blacs_int( N   );                       \
+  auto _LDA = detail::to_blacs_int( LDA );                       \
+  auto _RDEST = detail::to_blacs_int( RDEST );                   \
+  auto _CDEST = detail::to_blacs_int( CDEST );                   \
+                                                                 \
+  fname( ICONTXT, SCOPE, TOP, _M, _N, A, _LDA, _RDEST, _CDEST ); \
+                                                                 \
 }
 
 gsum2d_impl( Cigsum2d, blacs_int );
@@ -112,15 +122,32 @@ gsum2d_impl( Czgsum2d, dcomplex  );
 
 // Element-wise max
 #define gamx2d_impl( fname, type )\
-template <>                                                                 \
-void gamx2d<type>(                                                          \
-  const blacs_int ICONTXT, const char* SCOPE, const char* TOP,                \
-  const blacs_int M, const blacs_int N, type* A, const blacs_int LDA,       \
-  blacs_int* RA, blacs_int* CA, const blacs_int RCFLAG,                     \
-  const blacs_int RDEST, const blacs_int CDEST ) {                          \
-                                                                            \
-  fname( ICONTXT, SCOPE, TOP, M, N, A, LDA, RA, CA, RCFLAG, RDEST, CDEST ); \
-                                                                            \
+template <>                                                                         \
+void gamx2d<type>(                                                                  \
+  const int64_t ICONTXT, const char* SCOPE, const char* TOP,                        \
+  const int64_t M, const int64_t N, type* A, const int64_t LDA,                     \
+  int64_t* RA, int64_t* CA, const int64_t RCFLAG,                                   \
+  const int64_t RDEST, const int64_t CDEST ) {                                      \
+                                                                                    \
+  auto _M   = detail::to_blacs_int( M   );                                          \
+  auto _N   = detail::to_blacs_int( N   );                                          \
+  auto _LDA = detail::to_blacs_int( LDA );                                          \
+  auto _RDEST = detail::to_blacs_int( RDEST );                                      \
+  auto _CDEST = detail::to_blacs_int( CDEST );                                      \
+  auto _RCFLAG = detail::to_blacs_int( RCFLAG );                                    \
+                                                                                    \
+  std::vector<blacs_int> RA_DATA( RCFLAG >= 0 ? N*RCFLAG : 0 );                     \
+  std::vector<blacs_int> CA_DATA( RCFLAG >= 0 ? N*RCFLAG : 0 );                     \
+  auto* _RA = RA_DATA.data();                                                       \
+  auto* _CA = CA_DATA.data();                                                       \
+                                                                                    \
+  fname( ICONTXT, SCOPE, TOP, _M, _N, A, _LDA, _RA, _CA, _RCFLAG, _RDEST, _CDEST ); \
+                                                                                    \
+  if( RCFLAG >= 0 ) {                                                               \
+    std::copy_n( _RA, N*RCFLAG, RA );                                               \
+    std::copy_n( _CA, N*RCFLAG, CA );                                               \
+  }                                                                                 \
+                                                                                    \
 }
 
 gamx2d_impl( Cigamx2d, blacs_int );
@@ -131,15 +158,32 @@ gamx2d_impl( Czgamx2d, dcomplex  );
 
 // Element-wise min
 #define gamn2d_impl( fname, type )\
-template <>                                                                 \
-void gamn2d<type>(                                                          \
-  const blacs_int ICONTXT, const char* SCOPE, const char* TOP,                \
-  const blacs_int M, const blacs_int N, type* A, const blacs_int LDA,       \
-  blacs_int* RA, blacs_int* CA, const blacs_int RCFLAG,                     \
-  const blacs_int RDEST, const blacs_int CDEST ) {                          \
-                                                                            \
-  fname( ICONTXT, SCOPE, TOP, M, N, A, LDA, RA, CA, RCFLAG, RDEST, CDEST ); \
-                                                                            \
+template <>                                                                         \
+void gamn2d<type>(                                                                  \
+  const int64_t ICONTXT, const char* SCOPE, const char* TOP,                        \
+  const int64_t M, const int64_t N, type* A, const int64_t LDA,                     \
+  int64_t* RA, int64_t* CA, const int64_t RCFLAG,                                   \
+  const int64_t RDEST, const int64_t CDEST ) {                                      \
+                                                                                    \
+  auto _M   = detail::to_blacs_int( M   );                                          \
+  auto _N   = detail::to_blacs_int( N   );                                          \
+  auto _LDA = detail::to_blacs_int( LDA );                                          \
+  auto _RDEST = detail::to_blacs_int( RDEST );                                      \
+  auto _CDEST = detail::to_blacs_int( CDEST );                                      \
+  auto _RCFLAG = detail::to_blacs_int( RCFLAG );                                    \
+                                                                                    \
+  std::vector<blacs_int> RA_DATA( RCFLAG >= 0 ? N*RCFLAG : 0 );                     \
+  std::vector<blacs_int> CA_DATA( RCFLAG >= 0 ? N*RCFLAG : 0 );                     \
+  auto* _RA = RA_DATA.data();                                                       \
+  auto* _CA = CA_DATA.data();                                                       \
+                                                                                    \
+  fname( ICONTXT, SCOPE, TOP, _M, _N, A, _LDA, _RA, _CA, _RCFLAG, _RDEST, _CDEST ); \
+                                                                                    \
+  if( RCFLAG >= 0 ) {                                                               \
+    std::copy_n( _RA, N*RCFLAG, RA );                                               \
+    std::copy_n( _CA, N*RCFLAG, CA );                                               \
+  }                                                                                 \
+                                                                                    \
 }
 
 gamn2d_impl( Cigamn2d, blacs_int );

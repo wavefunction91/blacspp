@@ -28,6 +28,12 @@ if( NOT linalg-cmake-modules_POPULATED )
   list( APPEND CMAKE_MODULE_PATH ${linalg-cmake-modules_SOURCE_DIR} )
 endif()
 
+# Configure Options
+include( CMakeDependentOption )
+option( BLACSPP_ENABLE_ILP64 "Enable search for ILP64 ScaLAPACK bindings" OFF )
+cmake_dependent_option( BLACSPP_FORCE_ILP64 "Force ILP64 - Fail if not found" OFF
+                        "BLACSPP_ENABLE_ILP64" OFF )
+
 
 
 add_subdirectory( src )

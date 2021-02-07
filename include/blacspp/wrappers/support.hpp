@@ -12,36 +12,36 @@ namespace wrappers {
 
 
 // Initialization
-void pinfo( blacs_int& IAM, blacs_int& NPROCS );
-void set( const blacs_int ICONTXT, const blacs_int WHAT, const blacs_int* VAL );
-void get( const blacs_int ICONTXT, const blacs_int WHAT, blacs_int* VAL );
+void pinfo( int64_t& IAM, int64_t& NPROCS );
+void set( const int64_t ICONTXT, const int64_t WHAT, const int64_t* VAL );
+void get( const int64_t ICONTXT, const int64_t WHAT, int64_t* VAL );
 
-blacs_int grid_init( blacs_int ICONTXT, const char* ORDER, const blacs_int NPROW,
-                     const blacs_int NPCOL );
+int64_t grid_init( int64_t ICONTXT, const char* ORDER, const int64_t NPROW,
+                     const int64_t NPCOL );
 
-blacs_int grid_map( blacs_int ICONTXT, const blacs_int* USERMAP, 
-                    const blacs_int LDUMAP, const blacs_int NPROW, 
-                    const blacs_int NPCOL ); 
+int64_t grid_map( int64_t ICONTXT, const int64_t* USERMAP, 
+                    const int64_t LDUMAP, const int64_t NPROW, 
+                    const int64_t NPCOL ); 
 
 // Destruction
-void grid_exit( const blacs_int ICONTXT );
-void exit( const blacs_int CONTINUE );
-void abort( const blacs_int ICONTXT, const blacs_int ERRORNUM );
-void freebuff( const blacs_int ICONTXT, const blacs_int WAIT );
+void grid_exit( const int64_t ICONTXT );
+void exit( const int64_t CONTINUE );
+void abort( const int64_t ICONTXT, const int64_t ERRORNUM );
+void freebuff( const int64_t ICONTXT, const int64_t WAIT );
 
 
 // Infortmational
-blacs_grid_dim  grid_info( const blacs_int ICONTXT );
-blacs_int        pnum( const blacs_int ICONTXT, const blacs_int PROW, 
-                       const blacs_int PCOL );
+blacs_grid_dim  grid_info( const int64_t ICONTXT );
+int64_t        pnum( const int64_t ICONTXT, const int64_t PROW, 
+                       const int64_t PCOL );
 
-std::pair< blacs_int, blacs_int > pcoord( const blacs_int ICONTXT, 
-                                          const blacs_int  PNUM );
+std::pair< int64_t, int64_t > pcoord( const int64_t ICONTXT, 
+                                          const int64_t  PNUM );
 
 // Misc
-void barrier( const blacs_int ICONTXT, const char* SCOPE );
-blacs_int blacs_from_sys( MPI_Comm c );
-void free_sys_handle( const blacs_int handle );
+void barrier( const int64_t ICONTXT, const char* SCOPE );
+int64_t blacs_from_sys( MPI_Comm c );
+void free_sys_handle( const int64_t handle );
 
 
 }
