@@ -63,7 +63,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gesd2d( const Grid& grid, 
           const int64_t M, const int64_t N, const Container& A, 
           const int64_t LDA, const int64_t RDEST, const int64_t CDEST ) {
@@ -93,7 +93,7 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gesd2d( const Grid& grid, const Container& A, 
           const int64_t RDEST, const int64_t CDEST ) {
 
@@ -125,14 +125,14 @@ std::enable_if_t< detail::has_size_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trsd2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
+  trsd2d( const Grid& grid, const Uplo uplo, const Diag diag, 
           const int64_t M, const int64_t N, const T* A, const int64_t LDA, 
           const int64_t RDEST, const int64_t CDEST ) {
 
-  auto UPLO = detail::type_string( uplo );
-  auto DIAG = detail::type_string( diag );
+  auto UPLO = char( uplo );
+  auto DIAG = char( diag );
 
-  wrappers::trsd2d( grid.context(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA, RDEST, CDEST );
+  wrappers::trsd2d( grid.context(), &UPLO, &DIAG, M, N, A, LDA, RDEST, CDEST );
 
 }
 
@@ -160,8 +160,8 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
-  trsd2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
+detail::enable_if_t< detail::has_data_member<Container>::value >
+  trsd2d( const Grid& grid, const Uplo uplo, const Diag diag, 
           const int64_t M, const int64_t N, const Container& A, 
           const int64_t LDA, const int64_t RDEST, const int64_t CDEST ) {
 
@@ -233,7 +233,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gerv2d( const Grid& grid, const int64_t M, const int64_t N,
           Container& A, const int64_t LDA, const int64_t RSRC,
           const int64_t CSRC ) {
@@ -262,7 +262,7 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gerv2d( const Grid& grid, Container& A, 
           const int64_t RSRC, const int64_t CSRC ) {
 
@@ -293,14 +293,14 @@ std::enable_if_t< detail::has_size_member_v<Container> >
  */
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
-  trrv2d( const Grid& grid, const Triangle uplo, const Diagonal diag, 
+  trrv2d( const Grid& grid, const Uplo uplo, const Diag diag, 
           const int64_t M, const int64_t N, T* A, const int64_t LDA, 
           const int64_t RSRC, const int64_t CSRC ) {
 
-  auto UPLO = detail::type_string( uplo );
-  auto DIAG = detail::type_string( diag );
+  auto UPLO = char( uplo );
+  auto DIAG = char( diag );
 
-  wrappers::trrv2d( grid.context(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA, RSRC, CSRC );
+  wrappers::trrv2d( grid.context(), &UPLO, &DIAG, M, N, A, LDA, RSRC, CSRC );
 
 }
 
@@ -328,8 +328,8 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
-  trrv2d( const Grid& grid,  const Triangle uplo, const Diagonal diag,
+detail::enable_if_t< detail::has_data_member<Container>::value >
+  trrv2d( const Grid& grid,  const Uplo uplo, const Diag diag,
           const int64_t M, const int64_t N, Container& A, 
           const int64_t LDA, const int64_t RSRC, const int64_t CSRC ) {
 

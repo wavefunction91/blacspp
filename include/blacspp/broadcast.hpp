@@ -36,9 +36,9 @@ detail::enable_if_blacs_supported_t<T>
   gebs2d( const Grid& grid, const Scope scope, const Topology top,
           const int64_t M, const int64_t N, const T* A, const int64_t LDA ) {
 
-  auto SCOPE = detail::type_string( scope );
-  auto TOP   = detail::type_string( top   );
-  wrappers::gebs2d( grid.context(), SCOPE.c_str(), TOP.c_str(), M, N, A, LDA );
+  auto SCOPE = char( scope );
+  auto TOP   = char( top   );
+  wrappers::gebs2d( grid.context(), &SCOPE, &TOP, M, N, A, LDA );
 
 }
 
@@ -63,7 +63,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gebs2d( const Grid& grid, const Scope scope, const Topology top,
           const int64_t M, const int64_t N, const Container& A, 
           const int64_t LDA ) {
@@ -91,7 +91,7 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gebs2d( const Grid& grid, const Scope scope, const Topology top,
           const Container& A ) {
 
@@ -122,15 +122,15 @@ std::enable_if_t< detail::has_size_member_v<Container> >
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
   trbs2d( const Grid& grid, const Scope scope, const Topology top,
-          const Triangle uplo, const Diagonal diag,
+          const Uplo uplo, const Diag diag,
           const int64_t M, const int64_t N, const T* A, const int64_t LDA ) {
 
-  auto SCOPE = detail::type_string( scope );
-  auto TOP   = detail::type_string( top   );
-  auto UPLO  = detail::type_string( uplo  );
-  auto DIAG  = detail::type_string( diag  );
+  auto SCOPE = char( scope );
+  auto TOP   = char( top   );
+  auto UPLO  = char( uplo  );
+  auto DIAG  = char( diag  );
 
-  wrappers::trbs2d( grid.context(), SCOPE.c_str(), TOP.c_str(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA );
+  wrappers::trbs2d( grid.context(), &SCOPE, &TOP, &UPLO, &DIAG, M, N, A, LDA );
 
 }
 
@@ -156,9 +156,9 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   trbs2d( const Grid& grid, const Scope scope, const Topology top,
-          const Triangle uplo, const Diagonal diag,
+          const Uplo uplo, const Diag diag,
           const int64_t M, const int64_t N, const Container& A, 
           const int64_t LDA ) {
 
@@ -201,9 +201,9 @@ detail::enable_if_blacs_supported_t<T>
   gebr2d( const Grid& grid, const Scope scope, const Topology top,
           const int64_t M, const int64_t N, T* A, const int64_t LDA ) {
 
-  auto SCOPE = detail::type_string( scope );
-  auto TOP   = detail::type_string( top   );
-  wrappers::gebr2d( grid.context(), SCOPE.c_str(), TOP.c_str(), M, N, A, LDA );
+  auto SCOPE = char( scope );
+  auto TOP   = char( top   );
+  wrappers::gebr2d( grid.context(), &SCOPE, &TOP, M, N, A, LDA );
 
 }
 
@@ -227,7 +227,7 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   gebr2d( const Grid& grid, const Scope scope, const Topology top,
           const int64_t M, const int64_t N, Container& A, const int64_t LDA ) {
 
@@ -253,7 +253,7 @@ std::enable_if_t< detail::has_data_member_v<Container> >
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_size_member_v<Container> >
+detail::enable_if_t< detail::has_size_member<Container>::value >
   gebr2d( const Grid& grid, const Scope scope, const Topology top, Container& A ) { 
 
   gebr2d( grid, scope, top, A.size(), 1, A, A.size() );
@@ -282,15 +282,15 @@ std::enable_if_t< detail::has_size_member_v<Container> >
 template <typename T>
 detail::enable_if_blacs_supported_t<T> 
   trbr2d( const Grid& grid, const Scope scope, const Topology top,
-          const Triangle uplo, const Diagonal diag,
+          const Uplo uplo, const Diag diag,
           const int64_t M, const int64_t N, T* A, const int64_t LDA ) { 
 
-  auto SCOPE = detail::type_string( scope );
-  auto TOP   = detail::type_string( top   );
-  auto UPLO  = detail::type_string( uplo  );
-  auto DIAG  = detail::type_string( diag  );
+  auto SCOPE = char( scope );
+  auto TOP   = char( top   );
+  auto UPLO  = char( uplo  );
+  auto DIAG  = char( diag  );
 
-  wrappers::trbr2d( grid.context(), SCOPE.c_str(), TOP.c_str(), UPLO.c_str(), DIAG.c_str(), M, N, A, LDA );
+  wrappers::trbr2d( grid.context(), &SCOPE, &TOP, &UPLO, &DIAG, M, N, A, LDA );
 
 }
 
@@ -316,9 +316,9 @@ detail::enable_if_blacs_supported_t<T>
  *
  */
 template <class Container>
-std::enable_if_t< detail::has_data_member_v<Container> >
+detail::enable_if_t< detail::has_data_member<Container>::value >
   trbr2d( const Grid& grid, const Scope scope, const Topology top,
-          const Triangle uplo, const Diagonal diag,
+          const Uplo uplo, const Diag diag,
           const int64_t M, const int64_t N, Container& A, const int64_t LDA ) {
 
   trbr2d( grid, scope, top, uplo, diag, M, N, A.data(), LDA );

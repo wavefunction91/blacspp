@@ -116,7 +116,7 @@ int64_t grid_map( int64_t ICONTXT, const int64_t* USERMAP,
   blacs_int _NPCOL   = detail::to_blacs_int( NPCOL );
 
 
-  if constexpr ( not std::is_same_v<blacs_int,int64_t> ) {
+  if( not std::is_same<blacs_int,int64_t>::value ) {
 
     std::vector<blacs_int> _USERMAP( NPROW * NPCOL );
     for( int64_t j = 0; j < NPCOL; ++j )
@@ -126,7 +126,7 @@ int64_t grid_map( int64_t ICONTXT, const int64_t* USERMAP,
 
     Cblacs_gridmap( &_ICONTXT, _USERMAP.data(), _LDUMAP, _NPROW, _NPCOL );
     
-  } else if constexpr ( std::is_same_v<blacs_int,int64_t> ) {
+  } else if( std::is_same<blacs_int,int64_t>::value ) {
 
     Cblacs_gridmap( &_ICONTXT, reinterpret_cast<const blacs_int*>(USERMAP), 
                     LDUMAP, _NPROW, _NPCOL );
