@@ -10,7 +10,7 @@
 #include <vector>
 
 #define BLACSPP_TEMPLATE_TEST_CASE(NAME, CAT)\
-TEMPLATE_TEST_CASE(NAME,CAT,blacspp::blacs_int, float, double, blacspp::scomplex, blacspp::dcomplex)
+TEMPLATE_TEST_CASE(NAME,CAT,blacspp::internal::blacs_int, float, double, blacspp::internal::scomplex, blacspp::internal::dcomplex)
 
 
 BLACSPP_TEMPLATE_TEST_CASE( "General 2D Send-Recv", "[send-recv]" ) {
@@ -19,7 +19,7 @@ BLACSPP_TEMPLATE_TEST_CASE( "General 2D Send-Recv", "[send-recv]" ) {
 
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const blacspp::blacs_int M(4), N(4);
+  const int64_t M(4), N(4);
 
   std::vector< TestType > data_send( M*N, TestType(mpi.rank()) );
   std::vector< TestType > data_recv( M*N, TestType(-1) );
@@ -88,12 +88,12 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
 
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const blacspp::blacs_int M(4), N(4);
+  const int64_t M(4), N(4);
 
   std::vector< TestType > data_send( M*N, TestType(mpi.rank()) );
   std::vector< TestType > data_recv( M*N, TestType(-1) );
 
-  auto check = [&](blacspp::Triangle triangle, blacspp::Diagonal diag) {
+  auto check = [&](blacspp::Uplo triangle, blacspp::Diag diag) {
     // Check that send data is unchanged
     for( auto x : data_send ) CHECK( x == TestType(mpi.rank()) );
 
@@ -107,13 +107,13 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
       for( auto i = 0; i < M; ++i )
       for( auto j = 0; j < N; ++j ) {
         auto x = data_recv[ i + M*j ];
-        if( diag == blacspp::Diagonal::Unit and i == j )
+        if( diag == blacspp::Diag::Unit and i == j )
           CHECK( x == TestType(-1) ); // unchanged
 
-        else if( triangle == blacspp::Triangle::Upper and j >= i ) 
+        else if( triangle == blacspp::Uplo::Upper and j >= i ) 
           CHECK( x == TestType(rank_col) );
 
-        else if( triangle == blacspp::Triangle::Lower and i >= j ) 
+        else if( triangle == blacspp::Uplo::Lower and i >= j ) 
           CHECK( x == TestType(rank_col) );
 
         else
@@ -121,8 +121,8 @@ BLACSPP_TEMPLATE_TEST_CASE( "Triangular 2D Send-Recv", "[send-recv]" ) {
       }
   };
 
-  std::array< blacspp::Triangle, 2 > tris  = { blacspp::Triangle::Upper, blacspp::Triangle::Lower   };
-  std::array< blacspp::Diagonal, 2 > diags = { blacspp::Diagonal::Unit,  blacspp::Diagonal::NonUnit };
+  std::array< blacspp::Uplo, 2 > tris  = { blacspp::Uplo::Upper, blacspp::Uplo::Lower   };
+  std::array< blacspp::Diag, 2 > diags = { blacspp::Diag::Unit,  blacspp::Diag::NonUnit };
 
 
   SECTION( "Pointer Interface" ) {

@@ -5,8 +5,12 @@
  *  All rights reserved
  */
 #include <blacspp/wrappers/support.hpp>
+#include <blacspp/util/type_conversions.hpp>
 
-using blacspp::blacs_int;
+#include <vector>
+#include <type_traits>
+
+using blacspp::internal::blacs_int;
 
 // Prototypes
 extern "C" {
@@ -49,41 +53,87 @@ namespace wrappers {
 
 
 // Initialization
-void pinfo( blacs_int& IAM, blacs_int& NPROCS ) {
+void pinfo( int64_t& IAM, int64_t& NPROCS ) {
 
-  Cblacs_pinfo( &IAM, &NPROCS );
+  blacs_int _IAM, _NPROCS;
 
-}
+  Cblacs_pinfo( &_IAM, &_NPROCS );
 
-
-void set( const blacs_int ICONTXT, const blacs_int WHAT, const blacs_int* VAL ) {
-
-  Cblacs_set( ICONTXT, WHAT, VAL );
+  IAM    = _IAM;
+  NPROCS = _NPROCS;
 
 }
 
 
-void get( const blacs_int ICONTXT, const blacs_int WHAT, blacs_int* VAL ) {
+void set( const int64_t ICONTXT, const int64_t WHAT, const int64_t* VAL ) {
 
-  Cblacs_get( ICONTXT, WHAT, VAL );
+  blacs_int _ICONTXT = detail::to_blacs_int( ICONTXT );
+  blacs_int _WHAT    = detail::to_blacs_int( WHAT );
+  blacs_int _VAL[2];
+
+  _VAL[0] = VAL[0];
+  if( WHAT == 1 )
+    _VAL[1] = VAL[1];
+
+  Cblacs_set( _ICONTXT, _WHAT, _VAL );
+
+  
+}
+
+
+void get( const int64_t ICONTXT, const int64_t WHAT, int64_t* VAL ) {
+
+  blacs_int _ICONTXT = detail::to_blacs_int( ICONTXT );
+  blacs_int _WHAT    = detail::to_blacs_int( WHAT );
+  blacs_int _VAL;
+
+  Cblacs_get( _ICONTXT, _WHAT, &_VAL );
+
+  *VAL = _VAL;
 
 }
 
-blacs_int grid_init( blacs_int ICONTXT, const char* ORDER, const blacs_int NPROW,
-                     const blacs_int NPCOL ) {
+int64_t grid_init( int64_t ICONTXT, const char* ORDER, const int64_t NPROW,
+                   const int64_t NPCOL ) {
 
-  Cblacs_gridinit( &ICONTXT, ORDER, NPROW, NPCOL );
-  return ICONTXT;
+  blacs_int _ICONTXT = detail::to_blacs_int( ICONTXT );
+  blacs_int _NPROW   = detail::to_blacs_int( NPROW );
+  blacs_int _NPCOL   = detail::to_blacs_int( NPCOL );
+
+  Cblacs_gridinit( &_ICONTXT, ORDER, _NPROW, _NPCOL );
+
+  return _ICONTXT;
 
 }
 
-blacs_int grid_map( blacs_int ICONTXT, const blacs_int* USERMAP, 
-                    const blacs_int LDUMAP, const blacs_int NPROW, 
-                    const blacs_int NPCOL ) {
+
+int64_t grid_map( int64_t ICONTXT, const int64_t* USERMAP, 
+                  const int64_t LDUMAP, const int64_t NPROW, 
+                  const int64_t NPCOL ) {
+
+  blacs_int _ICONTXT = detail::to_blacs_int( ICONTXT );
+  blacs_int _NPROW   = detail::to_blacs_int( NPROW );
+  blacs_int _NPCOL   = detail::to_blacs_int( NPCOL );
 
 
-  Cblacs_gridmap( &ICONTXT, USERMAP, LDUMAP, NPROW, NPCOL );
-  return ICONTXT;
+  if( not std::is_same<blacs_int,int64_t>::value ) {
+
+    std::vector<blacs_int> _USERMAP( NPROW * NPCOL );
+    for( int64_t j = 0; j < NPCOL; ++j )
+    for( int64_t i = 0; i < NPROW; ++i )
+      _USERMAP[i + j*NPROW] = USERMAP[i + j*LDUMAP];
+    auto _LDUMAP = _NPROW;
+
+    Cblacs_gridmap( &_ICONTXT, _USERMAP.data(), _LDUMAP, _NPROW, _NPCOL );
+    
+  } else if( std::is_same<blacs_int,int64_t>::value ) {
+
+    Cblacs_gridmap( &_ICONTXT, reinterpret_cast<const blacs_int*>(USERMAP), 
+                    LDUMAP, _NPROW, _NPCOL );
+
+  }
+
+  return _ICONTXT;
 
 }
 
@@ -91,17 +141,19 @@ blacs_int grid_map( blacs_int ICONTXT, const blacs_int* USERMAP,
 
 
 // Destruction
-void grid_exit( const blacs_int ICONTXT ) {
-  Cblacs_gridexit( ICONTXT );
+void grid_exit( const int64_t ICONTXT ) {
+  Cblacs_gridexit( detail::to_blacs_int(ICONTXT) );
 }
-void exit( const blacs_int CONTINUE ) {
-  Cblacs_exit( CONTINUE );
+void exit( const int64_t CONTINUE ) {
+  Cblacs_exit( detail::to_blacs_int(CONTINUE) );
 }
-void abort( const blacs_int ICONTXT, const blacs_int ERRORNUM ) {
-  Cblacs_abort( ICONTXT, ERRORNUM );
+void abort( const int64_t ICONTXT, const int64_t ERRORNUM ) {
+  Cblacs_abort( detail::to_blacs_int(ICONTXT), 
+                detail::to_blacs_int(ERRORNUM) );
 }
-void freebuff( const blacs_int ICONTXT, const blacs_int WAIT ) {
-  Cblacs_freebuff( ICONTXT, WAIT );
+void freebuff( const int64_t ICONTXT, const int64_t WAIT ) {
+  Cblacs_freebuff( detail::to_blacs_int(ICONTXT), 
+                   detail::to_blacs_int(WAIT) );
 }
 
 
@@ -110,44 +162,60 @@ void freebuff( const blacs_int ICONTXT, const blacs_int WAIT ) {
 
 
 // Infortmational
-blacs_grid_dim  grid_info( const blacs_int ICONTXT ) {
+blacs_grid_dim  grid_info( const int64_t ICONTXT ) {
+
+  blacs_int npr, npc, ipr, ipc;
+  Cblacs_gridinfo( ICONTXT, &npr, &npc, &ipr, &ipc );
 
   blacs_grid_dim info;
-  Cblacs_gridinfo( ICONTXT, &info.np_row, &info.np_col, &info.my_row, &info.my_col );
+  info.np_row = npr;
+  info.np_col = npc;
+  info.my_row = ipr;
+  info.my_col = ipc;
+
   return info;
 
 }
 
-blacs_int pnum( const blacs_int ICONTXT, const blacs_int PROW, 
-                const blacs_int PCOL ) {
+int64_t pnum( const int64_t ICONTXT, const int64_t PROW, 
+                const int64_t PCOL ) {
 
-  return Cblacs_pnum( ICONTXT, PROW, PCOL );
+  auto _ICONTXT = detail::to_blacs_int( ICONTXT );
+  auto _PROW    = detail::to_blacs_int( PROW );
+  auto _PCOL    = detail::to_blacs_int( PCOL );
+
+  return Cblacs_pnum( _ICONTXT, _PROW, _PCOL );
 
 }
 
-std::pair< blacs_int, blacs_int > pcoord( const blacs_int ICONTXT, 
-                                          const blacs_int  PNUM ) {
+std::pair< int64_t, int64_t > pcoord( const int64_t ICONTXT, 
+                                      const int64_t PNUM ) {
 
-  std::pair< blacs_int, blacs_int > coord;
-  Cblacs_pcoord( ICONTXT, PNUM, &coord.first, &coord.second );
+  auto _ICONTXT = detail::to_blacs_int( ICONTXT );
+  auto _PNUM    = detail::to_blacs_int( PNUM );
+
+  blacs_int ipr, ipc;
+  Cblacs_pcoord( ICONTXT, PNUM, &ipr, &ipc );
+
+  std::pair< int64_t, int64_t > coord = {ipr, ipc};
   return coord;
 
 }
 
 
 // Misc
-void barrier( const blacs_int ICONTXT, const char* SCOPE ) {
-  Cblacs_barrier( ICONTXT, SCOPE );
+void barrier( const int64_t ICONTXT, const char* SCOPE ) {
+  Cblacs_barrier( detail::to_blacs_int(ICONTXT), SCOPE );
 }
 
-blacs_int blacs_from_sys( MPI_Comm c ) {
+int64_t blacs_from_sys( MPI_Comm c ) {
 
   return Csys2blacs_handle( c );
 
 }
 
-void free_sys_handle( const blacs_int handle ) {
-  Cfree_blacs_system_handle( handle );
+void free_sys_handle( const int64_t handle ) {
+  Cfree_blacs_system_handle( detail::to_blacs_int(handle) );
 }
 
 

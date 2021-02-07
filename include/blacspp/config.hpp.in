@@ -1,0 +1,3 @@
+#pragma once
+
+#cmakedefine SCALAPACK_IS_ILP64
