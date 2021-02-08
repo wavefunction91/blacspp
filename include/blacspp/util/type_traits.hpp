@@ -24,7 +24,7 @@ namespace detail {
   using void_t = void;
 #else
   template <class... Args>
-  using std::void_t<Args...>;
+  using void_t = std::void_t<Args...>;
 #endif
 
   /**
