@@ -19,8 +19,8 @@ endif()
 # Get Modifed BLAS/LAPACK/ScaLAPACK Modules
 include( FetchContent )
 FetchContent_Declare( linalg-cmake-modules 
-  GIT_REPOSITORY https://github.com/wavefunction91/linalg-cmake-modules.git
-  GIT_TAG        main
+  GIT_REPOSITORY https://github.com/ajaypanyala/linalg-cmake-modules.git
+  GIT_TAG        9cd2f8f7ac71ecefaf6b449ee17e84fdbee8fcd6 
 )
 FetchContent_GetProperties( linalg-cmake-modules )
 if( NOT linalg-cmake-modules_POPULATED )
