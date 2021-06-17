@@ -15,10 +15,9 @@ if( NOT TARGET ScaLAPACK::ScaLAPACK )
     set( ScaLAPACK_IS_LP64 TRUE )
   endif()
 
+  find_dependency( MPI )
+
   enable_language( C )
-  if( MPI::MPI_C IN_LIST ScaLAPACK_LIBRARIES )
-    find_dependency( MPI )
-  endif()
   if( OpenMP::OpenMP_C IN_LIST ScaLAPACK_LIBRARIES )
     find_dependency( OpenMP )
   endif()

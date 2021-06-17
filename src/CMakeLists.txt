@@ -4,6 +4,9 @@
 # Copyright (c) 2019-2020 David Williams-Young
 # All rights reserved
 #
+
+find_package( MPI REQUIRED )
+
 if( NOT TARGET ScaLAPACK::ScaLAPACK )
 
   set( SCALAPACK_REQUIRED_COMPONENTS )
@@ -72,7 +75,7 @@ target_include_directories( blacspp PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries( blacspp PUBLIC ScaLAPACK::ScaLAPACK )
+target_link_libraries( blacspp PUBLIC ScaLAPACK::ScaLAPACK MPI::MPI_C )
 
 
 # Generate configure header
